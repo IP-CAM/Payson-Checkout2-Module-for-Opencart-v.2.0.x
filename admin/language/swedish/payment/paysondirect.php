@@ -4,12 +4,12 @@
 $_['paysondirect_example'] = 'Example Extra Text';
 
 // Heading Goes here:
-$_['heading_title'] = 'Payson Express';
+$_['heading_title'] = 'Payson Checkout 2.0';
 // Text
-$_['text_modul_name'] = 'PaysonExpress';
+$_['text_modul_name'] = 'Payson Checkout 2.0';
 $_['text_modul_version'] = '1.0.0.0';
 $_['text_payment'] = 'Payment';
-$_['text_success'] = 'Success: Du har &auml;ndrat Payson Express modulen!';
+$_['text_success'] = 'Success: Du har &auml;ndrat Payson Checkout 2.0 modulen!';
 $_['text_paysondirect'] = '<a onclick="window.open(\'https://www.payson.se/tj%C3%A4nster/ta-betalt\');"><img src="view/image/payment/payson.png" alt="Payson" title="Payson" /></a>';
 $_['text_edit'] = 'Uppdatera Payson Invoice';
 

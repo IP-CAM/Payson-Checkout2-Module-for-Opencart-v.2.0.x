@@ -28,7 +28,7 @@ class ModelPaymentPaysondirect extends Model {
         if ($status) {
             $method_data = array(
                 'code' => 'paysondirect',
-                'title' => 'Payson Express<br />',
+                'title' => 'Payson Checkout 2.0<br />',
                 'terms' => '',
                 'sort_order' => $this->config->get('paysondirect_sort_order')
             );

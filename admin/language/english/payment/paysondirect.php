@@ -3,14 +3,14 @@
 $_['paysondirect_example'] = 'Example Extra Text';
 
 // Heading Goes here:
-$_['heading_title'] = 'Payson Express';
+$_['heading_title'] = 'Payson Checkout 2.0';
 
 // Text
-$_['text_modul_name'] = 'PaysonExpress';
+$_['text_modul_name'] = 'Payson Checkout 2.0';
 $_['text_modul_version'] = '1.0.0.0';
 
 $_['text_payment'] = 'Payment';
-$_['text_success'] = 'Success: You have modified Payson Express module!';
+$_['text_success'] = 'Success: You have modified Payson Checkout 2.0 module!';
 $_['text_paysondirect'] = '<a onclick="window.open(\'https://www.payson.se/tj%C3%A4nster/ta-betalt\');"><img src="view/image/payment/payson.png" alt="Payson" title="Payson" /></a>';
 $_['text_edit'] = 'Edit Payson Direct';
 
@@ -54,7 +54,7 @@ $_['text_iframe_size_width_px'] = 'px';
 $_['entry_iframe_size_height_type'] = 'Percent or px';
 $_['text_iframe_size_height_percent'] = '%';
 $_['text_iframe_size_height_px'] = 'px';
-$_['entry_order_item_details_to_ignore'] = 'Order Item Details to ignore by PaysonExpress';
+$_['entry_order_item_details_to_ignore'] = 'Order Item Details to ignore by Payson Checkout 2.0';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify payment Payson module!';

@@ -12,6 +12,9 @@ Module for OpenCart implementing Payson
 ## Installation
 
 * Make a BACKUP of your web store and database. 
+
+* Go to the update if you already use a payment module of Payson (Uninstall Payson and Payson Invoice fee).
+
 * Copy all files from this repository into yor OpenCart root. 
 
 ### Configuration
@@ -33,6 +36,8 @@ Module for OpenCart implementing Payson
 * Login into your web shop Administration Panel.
 
 * Go to Extensions->Payments. Uninstall Payson. 
+
+•Go to Extensions->Order totals. Uninstall Payson Invoice fee.
 
 * Go to Opencart folder to the root directory of your store.
 

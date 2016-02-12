@@ -37,7 +37,7 @@ Module for OpenCart implementing Payson
 
 * Go to Extensions->Payments. Uninstall Payson. 
 
-•Go to Extensions->Order totals. Uninstall Payson Invoice fee.
+* Go to Extensions->Order totals. Uninstall Payson Invoice fee.
 
 * Go to Opencart folder to the root directory of your store.
 

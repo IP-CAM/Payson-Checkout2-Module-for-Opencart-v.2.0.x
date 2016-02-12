@@ -318,8 +318,8 @@ class ControllerPaymentPaysondirect extends Controller {
 
             $productTitle = (strlen($productTitle) > 80 ? substr($productTitle, 0, strpos($productTitle, ' ', 80)) : $productTitle);
 
-
-            $product_price = $this->currency->format($product['price'] * 100, $order_data['currency_code'], $order_data['currency_value'], false) / 100;
+            //$product_price = $this->currency->format($product['price'] * 100, $order_data['currency_code'], $order_data['currency_value'], false) / 100;
+			$product_price = $this->currency->format(($product['price'] + ($product['price']*$product['tax_rate'])), $order_data['currency_code'], $order_data['currency_value'], false);
 
             $this->data['order_items'][] = new PaysonEmbedded\OrderItem(html_entity_decode($productTitle, ENT_QUOTES, 'UTF-8'), $product_price, $product['quantity'], $product['tax_rate']);
         }

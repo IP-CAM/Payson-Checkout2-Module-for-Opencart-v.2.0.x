@@ -270,6 +270,22 @@ class ControllerPaymentPaysondirect extends Controller {
 
         return $errors;
     }
+    private function getCredentials() {
+        $storesInShop = $this->db->query("SELECT store_id FROM `" . DB_PREFIX . "store`");
+
+        $numberOfStores = $storesInShop->rows;
+
+        $keys = array_keys($numberOfStores);
+        //Since the store table do not contain the fist storeID this must be entered manualy in the $shopArray below
+        $shopArray = array(0 => 0);
+        for ($i = 0; $i < count($numberOfStores); $i++) {
+
+            foreach ($numberOfStores[$keys[$i]] as $value) {
+                array_push($shopArray, $value);
+            }
+        }
+        return $shopArray;
+    }
 
     private function getAPIInstanceMultiShop() {
         require_once 'paysonEmbedded/paysonapi.php';
@@ -277,10 +293,16 @@ class ControllerPaymentPaysondirect extends Controller {
             * For the use of our test or live environment use one following parameters:
             * TRUE: Use test environment, FALSE: use live environment */
         if (!$this->testMode) {
-            $merchant_id_multishop = explode('##', $this->config->get('paysondirect_merchant_id'));
-            $api_key_multishop = explode('##', $this->config->get('paysondirect_api_key'));
-            $merchant_id = $merchant_id_multishop[$this->config->get('config_store_id')];
-            $api_key = $api_key_multishop[$this->config->get('config_store_id')];
+            $merchant = explode('##', $this->config->get('paysondirect_merchant_id'));
+            $key = explode('##', $this->config->get('paysondirect_api_key'));
+            
+            $storeID = $this->config->get('config_store_id');
+            $shopArray = $this->getCredentials();
+            $multiStore = array_search($storeID, $shopArray);
+
+            $merchant_id = $merchant[$multiStore];
+            $api_key = $key[$multiStore];
+
             return new PaysonEmbedded\PaysonApi($merchant_id, $api_key, FALSE);
         }else {
             return new PaysonEmbedded\PaysonApi('4', '2acab30d-fe50-426f-90d7-8c60a7eb31d4', TRUE);

@@ -233,7 +233,7 @@ class ControllerPaymentPaysondirect extends Controller {
                                 email               = '" . $paymentResponsObject->customer->email . "',
                                 shipping_address_1  = '" . $paymentResponsObject->customer->street . "',
                                 shipping_city       = '" . $paymentResponsObject->customer->city . "', 
-                                shipping_country    = '" . $paymentResponsObject->customer->country . "', 
+                                shipping_country    = '" . $paymentResponsObject->customer->countryCode . "', 
                                 shipping_postcode   = '" . $paymentResponsObject->customer->postalCode . "',
                                 payment_code        = 'paysondirect'
                                 WHERE order_id      = '" . $orderIdTemp . "'");
@@ -464,7 +464,7 @@ class ControllerPaymentPaysondirect extends Controller {
                         shippingAddress_street_ddress = '" . $paymentDetails->customer->street . "',
                         shippingAddress_postal_code   = '" . $paymentDetails->customer->postalCode . "',
                         shippingAddress_city          = '" . $paymentDetails->customer->city . "', 
-                        shippingAddress_country       = '" . $paymentDetails->customer->country . "'
+                        shippingAddress_country       = '" . $paymentDetails->customer->countryCode . "'
 			WHERE  checkout_id            = '" . $id . "'"
         );
     }

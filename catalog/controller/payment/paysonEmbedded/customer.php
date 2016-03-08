@@ -2,7 +2,7 @@
 namespace PaysonEmbedded{
      class Customer{
         /** @var string $city */
-        private $city;
+        private $countryCode;
         /** @var string $country */
         private $country;
         /** @var int $identityNumber Date of birth YYMMDD (digits). */
@@ -24,14 +24,14 @@ namespace PaysonEmbedded{
         /** @var string $reference Customer reference used when purchase is made by a company..*/
         private $reference;
 
-        public function __construct($firstName = Null, $lastName = Null,  $email = Null,  $phone = Null, $identityNumber = Null, $city = Null, $country = Null, $postalCode = Null, $street = Null, $reference = Null, $type = 'person'){
+        public function __construct($firstName = Null, $lastName = Null,  $email = Null,  $phone = Null, $identityNumber = Null, $city = Null, $countryCode = Null, $postalCode = Null, $street = Null, $reference = Null, $type = 'person'){
             $this->firstName = $firstName;
             $this->lastName = $lastName;
             $this->email = $email;
             $this->phone = $phone;
             $this->identityNumber = $identityNumber;
             $this->city = $city; 
-            $this->country = $country;
+            $this->countryCode = $countryCode;
             $this->postalCode = $postalCode;
             $this->street = $street;
             $this->reference = $reference;
@@ -46,12 +46,12 @@ namespace PaysonEmbedded{
             return $this->city;
         }
         
-        public function setCountry($country){
+        public function setCountryCode($countryCode){
             $this->country = $country;
         }
         
-        public function getCountry(){
-            return $this->country;
+        public function getCountryCode(){
+            return $this->countryCode;
         }
         
         public function setIdentityNumber($identityNumber){

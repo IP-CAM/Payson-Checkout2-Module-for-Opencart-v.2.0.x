@@ -230,8 +230,7 @@
                             <input type="text" name="paysondirect_iframe_size_height" value="<?php echo $paysondirect_iframe_size_height; ?>" placeholder="<?php echo $entry_iframe_size_height; ?>" id="input-iframe-size-height" class="form-control" />
                         </div>
                     </div>  
-
-
+                    
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-iframe-size-height-type"><span data-toggle="tooltip" title="<?php echo $help_iframe_size_height_type; ?>"><?php echo $entry_iframe_size_height_type; ?></span></label>
@@ -245,6 +244,16 @@
                                 <option> <?php echo $text_iframe_size_height_percent; ?></option>
                                 <option><?php echo $text_iframe_size_height_px ?></option>    
                                 <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-logg"><?php echo $entry_show_receipt_page; ?></label>
+                        <div class="col-sm-10">
+                            <select name="paysondirect_receipt" id="input-receipt" class="form-control">
+                                <option value="1" <?=($paysondirect_receipt?'selected':'')?>> <?php echo $entry_show_receipt_page_yes; ?></option>
+                                <option value="0" <?=($paysondirect_receipt?'':'selected')?>><?php echo $entry_show_receipt_page_no; ?></option>
                             </select>
                         </div>
                     </div>

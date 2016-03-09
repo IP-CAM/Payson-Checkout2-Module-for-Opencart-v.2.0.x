@@ -54,6 +54,9 @@ $_['entry_iframe_size_height_type'] = 'Percent or px';
 $_['text_iframe_size_height_percent'] = '%';
 $_['text_iframe_size_height_px'] = 'px';
 $_['entry_order_item_details_to_ignore'] = 'Ignorerade ordertillägg vid Payson';
+$_['entry_show_receipt_page']           = 'Visa Kvittosidan';
+$_['entry_show_receipt_page_yes']           = 'Ja';
+$_['entry_show_receipt_page_no']           = 'Nej';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify payment Payson module!';

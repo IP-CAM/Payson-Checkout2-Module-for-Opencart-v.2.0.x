@@ -55,7 +55,9 @@ $_['entry_iframe_size_height_type'] = 'Percent or px';
 $_['text_iframe_size_height_percent'] = '%';
 $_['text_iframe_size_height_px'] = 'px';
 $_['entry_order_item_details_to_ignore'] = 'Order Item Details to ignore by Payson Checkout 2.0';
-
+$_['entry_show_receipt_page'] = 'Show Receipt Page';
+$_['entry_show_receipt_page_yes'] = 'Yes';
+$_['entry_show_receipt_page_no'] = 'No';
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify payment Payson module!';
 $_['error_merchant_id'] = 'Agent ID Required!';

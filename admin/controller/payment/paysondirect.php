@@ -85,6 +85,10 @@ class ControllerPaymentPaysondirect extends Controller {
         $this->data['text_iframe_size_height_percent'] = $this->language->get('text_iframe_size_height_percent');
         $this->data['text_iframe_size_height_px'] = $this->language->get('text_iframe_size_height_px');  
 
+        $this->data['entry_show_receipt_page'] = $this->language->get('entry_show_receipt_page');
+        $this->data['entry_show_receipt_page_yes'] = $this->language->get('entry_show_receipt_page_yes');
+        $this->data['entry_show_receipt_page_no'] = $this->language->get('entry_show_receipt_page_no');
+        
         $this->data['button_save'] = $this->language->get('button_save');
         $this->data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -276,6 +280,11 @@ class ControllerPaymentPaysondirect extends Controller {
             $this->data['paysondirect_iframe_size_height_type'] = $this->request->post['paysondirect_iframe_size_height_type'];
         } else {
             $this->data['paysondirect_iframe_size_height_type'] = $this->config->get('paysondirect_iframe_size_height_type');
+        }
+        if (isset($this->request->post['paysondirect_receipt'])) {
+            $this->data['paysondirect_receipt'] = $this->request->post['paysondirect_receipt'];
+        } else {
+            $this->data['paysondirect_receipt'] = $this->config->get('paysondirect_receipt');
         }
         
         if (isset($this->request->post['paysondirect_ignored_order_totals'])) {

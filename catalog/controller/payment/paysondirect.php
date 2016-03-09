@@ -17,12 +17,11 @@ class ControllerPaymentPaysondirect extends Controller {
         $this->load->language('payment/paysondirect');
         $iframeSetup = array();
         if (isset($this->request->get['snippet'])) {
-
             $iframeSetup['snippet'] = $this->getSnippetUrl($this->request->get['snippet']);
-            $iframeSetup['width'] = 100;
-            $iframeSetup['width_type'] = '%';
-            $iframeSetup['height'] = 700;
-            $iframeSetup['height_type'] = 'px';
+            $iframeSetup['width'] = (int) $this->config->get('paysondirect_iframe_size_width');
+            $iframeSetup['width_type'] = $this->config->get('paysondirect_iframe_size_width_type');
+            $iframeSetup['height'] = (int) $this->config->get('paysondirect_iframe_size_height');
+            $iframeSetup['height_type'] = $this->config->get('paysondirect_iframe_size_height_type');
             $iframeSetup['status'] = 'readyToPay';
             $iframeSetup['column_left'] = $this->load->controller('common/column_left');
             $iframeSetup['column_right'] = $this->load->controller('common/column_right');
@@ -261,10 +260,10 @@ class ControllerPaymentPaysondirect extends Controller {
                 $showReceiptPage = $this->config->get('paysondirect_receipt');
 
                 if ($showReceiptPage == 1) {
-                    $this->cart->clear();
+                    $this->unsetData($orderIdTemp);
                     $this->response->redirect($this->url->link('payment/paysondirect/index', 'snippet=' . $paymentResponsObject->snippet));
                 } else {
-                    $this->response->redirect($this->url->link('checkout/success', 'snippet=' . $paymentResponsObject->snippet));
+                    $this->response->redirect($this->url->link('checkout/success'));
                 }
                 break;
             case "readyToPay":
@@ -526,6 +525,44 @@ class ControllerPaymentPaysondirect extends Controller {
         } else {
             return null;
         }
+    }
+    
+    private function unsetData($order_id){
+
+    	$this->cart->clear();
+
+			// Add to activity log
+			$this->load->model('account/activity');
+
+			if ($this->customer->isLogged()) {
+				$activity_data = array(
+					'customer_id' => $this->customer->getId(),
+					'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+					'order_id'    => $order_id
+				);
+
+				$this->model_account_activity->addActivity('order_account', $activity_data);
+			} else {
+				$activity_data = array(
+					'name'     => $this->session->data['guest']['firstname'] . ' ' . $this->session->data['guest']['lastname'],
+					'order_id' => $order_id
+				);
+
+				$this->model_account_activity->addActivity('order_guest', $activity_data);
+			}
+
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+			unset($this->session->data['guest']);
+			unset($this->session->data['comment']);
+			unset($this->session->data['order_id']);
+			unset($this->session->data['coupon']);
+			unset($this->session->data['reward']);
+			unset($this->session->data['voucher']);
+			unset($this->session->data['vouchers']);
+			unset($this->session->data['totals']);
     }
 
     public function languagePaysondirect() {

@@ -75,8 +75,9 @@ $_['help_request_phone'] = 'Enable telefonnummer';
 $_['help_color_scheme'] = 'Ange färgen av schema';
 $_['help_iframe_size_height'] = 'Ange höjden av iframe';
 $_['help_iframe_size_width'] = 'Ange bredden av iframe';
-$_['help_iframe_size_height_type'] = 'Ange höjden XXXXXX av iframe';
-$_['help_iframe_size_width_type'] = 'Ange bredden XXXXXX av iframe';
+$_['help_iframe_size_height_type'] = 'Ange höjden av iframe';
+$_['help_iframe_size_width_type'] = 'Ange bredden av iframe';
 $_['help_total'] = 'Kassan totala ordern m&aring;ste uppn&aring; innan betalningsmetod blir aktiv';
+$_['help_receipt'] = 'Välj Ja för Paysons kvittosidan eller Nej for Opencarts kvittosidan';
 $_['help_totals_to_ignore'] = 'Kommaseparerad lista med ordertillägg som ej skall skickas till Payson';
 ?>

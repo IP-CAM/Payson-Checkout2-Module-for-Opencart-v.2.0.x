@@ -249,11 +249,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-logg"><?php echo $entry_show_receipt_page; ?></label>
+                        <label class="col-sm-2 control-label" for="input-receipt"><span data-toggle="tooltip" title="<?php echo $help_receipt; ?>"><?php echo $entry_show_receipt_page; ?></span></label>
                         <div class="col-sm-10">
                             <select name="paysondirect_receipt" id="input-receipt" class="form-control">
-                                <option value="1" <?php=($paysondirect_receipt?'selected':'')?> <?php echo $entry_show_receipt_page_yes; ?></option>
-                                <option value="0" <?php=($paysondirect_receipt?'':'selected')?><?php echo $entry_show_receipt_page_no; ?></option>
+                                <option value="1" <?php echo ($paysondirect_receipt == 1 ? 'selected="selected"' : '""') . '>'  . $entry_show_receipt_page_yes?></option>
+                                <option value="0" <?php echo ($paysondirect_receipt == 0 ? 'selected="selected"' : '""') . '>' . $entry_show_receipt_page_no?></option>
                             </select>
                         </div>
                     </div>

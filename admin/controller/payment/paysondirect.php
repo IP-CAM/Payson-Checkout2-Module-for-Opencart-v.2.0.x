@@ -103,7 +103,8 @@ class ControllerPaymentPaysondirect extends Controller {
         $this->data['help_iframe_size_height'] = $this->language->get('help_iframe_size_height');
         $this->data['help_iframe_size_width'] = $this->language->get('help_iframe_size_width');
         $this->data['help_iframe_size_height_type'] = $this->language->get('help_iframe_size_height_type');
-        $this->data['help_iframe_size_width_type'] = $this->language->get('help_iframe_size_width_type');       
+        $this->data['help_iframe_size_width_type'] = $this->language->get('help_iframe_size_width_type'); 
+		$this->data['help_receipt'] = $this->language->get('help_receipt');		
         $this->data['help_totals_to_ignore'] = $this->language->get('help_totals_to_ignore');
         $this->data['help_method_mode'] = $this->language->get('help_method_mode');
 

@@ -75,8 +75,9 @@ $_['help_request_phone'] = 'Select phone';
 $_['help_color_scheme'] = 'Select color scheme';
 $_['help_iframe_size_height'] = 'Select the height of iframe';
 $_['help_iframe_size_width'] = 'Select the width of iframe';
-$_['help_iframe_size_height_type'] = 'Select the height XXXX of iframe';
-$_['help_iframe_size_width_type'] = 'Select the width XXXX of iframe';
+$_['help_iframe_size_height_type'] = 'Select the height of iframe';
+$_['help_iframe_size_width_type'] = 'Select the width of iframe';
 $_['help_total'] = 'The checkout total the order must reach before this payment method becomes active';
+$_['help_receipt'] = 'Select Yes for Payson receipt or No for Opencart receipt';
 $_['help_totals_to_ignore'] = 'Comma separated list with order totals not to send to payson';
 ?>

@@ -2,9 +2,9 @@
 namespace PaysonEmbedded{
      class Customer{
         /** @var string $city */
+        private $city;
+        /** @var string $countryCode */
         private $countryCode;
-        /** @var string $country */
-        private $country;
         /** @var int $identityNumber Date of birth YYMMDD (digits). */
         private $identityNumber;
         /** @var string $email */
@@ -47,7 +47,7 @@ namespace PaysonEmbedded{
         }
         
         public function setCountryCode($countryCode){
-            $this->country = $country;
+            $this->$countryCode = $countryCode;
         }
         
         public function getCountryCode(){

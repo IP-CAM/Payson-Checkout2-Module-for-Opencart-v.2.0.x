@@ -6,7 +6,7 @@ class ControllerPaymentPaysondirect extends Controller {
     private $api;
     private $data = array();
 
-    const MODULE_VERSION = 'paysonEmbedded_1.0.0.1';
+    const MODULE_VERSION = 'paysonEmbedded_1.0.0.2';
 
     function __construct($registry) {
         parent::__construct($registry);
@@ -70,7 +70,6 @@ class ControllerPaymentPaysondirect extends Controller {
         $this->data['store_name'] = html_entity_decode($order_data['store_name'], ENT_QUOTES, 'UTF-8');
         //Payson send the responds to the shop
         $this->data['ok_url'] = $this->url->link('payment/paysondirect/returnFromPayson');
-        $this->data['cancel_url'] = $this->url->link('checkout/cart');
         $this->data['ipn_url'] = $this->url->link('payment/paysondirect/paysonIpn&order_id=' . $this->session->data['order_id']);
         $this->data['checkout_url'] = $this->url->link('payment/paysondirect/returnFromPayson&order_id=' . $this->session->data['order_id']);
         $this->data['terms_url'] = $this->url->link('information/information/agree&information_id=5');
@@ -114,8 +113,9 @@ class ControllerPaymentPaysondirect extends Controller {
         $this->load->language('payment/paysondirect');
 
         $callPaysonApi = $this->getAPIInstanceMultiShop();
-        $paysonMerchant = new PaysonEmbedded\PaysonMerchant($callPaysonApi->getMerchantId(), $this->data['checkout_url'], $this->data['ok_url'], $this->data['ipn_url'], "http://www.google.se/#q=terms", $this->session->data['order_id'], null, 'payson_opencart|' . $this->config->get('paysondirect_modul_version') . '|' . VERSION);
 
+        $paysonMerchant = new PaysonEmbedded\PaysonMerchant((!$this->testMode ? $this->config->get('paysondirect_merchant_id') : '4'), $this->data['checkout_url'], $this->data['ok_url'], $this->data['ipn_url'], $this->data['terms_url'], null, ('payson_opencart|' . $this->config->get('paysondirect_modul_version') . '|' . VERSION));
+        $paysonMerchant->setReference($this->session->data['order_id']);
         $payData = new PaysonEmbedded\PayData();
         $payData->setCurrencyCode(PaysonEmbedded\CurrencyCode::ConstantToString($this->currencyPaysondirect()));
         $payData->setOrderItems($this->getOrderItems());
@@ -285,7 +285,6 @@ class ControllerPaymentPaysondirect extends Controller {
                 return false;
                 break;
             default:
-                $this->writeToLog("Error status RetrunUrl");
                 $this->response->redirect($this->url->link('checkout/cart'));
         }
     }
@@ -542,14 +541,15 @@ class ControllerPaymentPaysondirect extends Controller {
 				);
 
 				$this->model_account_activity->addActivity('order_account', $activity_data);
-			} else {
-				$activity_data = array(
-					'name'     => $this->session->data['guest']['firstname'] . ' ' . $this->session->data['guest']['lastname'],
-					'order_id' => $order_id
-				);
-
-				$this->model_account_activity->addActivity('order_guest', $activity_data);
-			}
+			} 
+//			else {
+//				$activity_data = array(
+//					'name'     => $this->session->data['guest']['firstname'] . ' ' . $this->session->data['guest']['lastname'],
+//					'order_id' => $order_id
+//				);
+//
+//				$this->model_account_activity->addActivity('order_guest', $activity_data);
+//			}
 
 			unset($this->session->data['shipping_method']);
 			unset($this->session->data['shipping_methods']);

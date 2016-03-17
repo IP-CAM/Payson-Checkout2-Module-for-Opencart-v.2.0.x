@@ -1,17 +1,17 @@
 <?php
 
-$_['paysondirect_example'] = 'Example Extra Text';
+$_['paysonCheckout2_example'] = 'Example Extra Text';
 
 // Heading Goes here:
 $_['heading_title'] = 'Payson Checkout 2.0';
 
 // Text
 $_['text_modul_name'] = 'Payson Checkout 2.0';
-$_['text_modul_version'] = '1.0.0.0';
+$_['text_modul_version'] = '1.0.1.0';
 
 $_['text_payment'] = 'Payment';
 $_['text_success'] = 'Success: You have modified Payson Checkout 2.0 module!';
-$_['text_paysondirect'] = '<a onclick="window.open(\'https://www.payson.se/tj%C3%A4nster/ta-betalt\');"><img src="view/image/payment/payson.png" alt="Payson" title="Payson" /></a>';
+$_['text_paysonCheckout2'] = '<a onclick="window.open(\'https://www.payson.se/tj%C3%A4nster/ta-betalt\');"><img src="view/image/payment/paysonCheckout2.png" alt="payson Checkout 2.0" title="payson Checkout 2.0" /></a>';
 $_['text_edit'] = 'Edit Payson Direct';
 
 // Entry

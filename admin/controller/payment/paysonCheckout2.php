@@ -1,26 +1,26 @@
 <?php
 
-class ControllerPaymentPaysondirect extends Controller {
+class ControllerPaymentPaysonCheckout2 extends Controller {
 
     private $error = array();
     private $data = array();
 
     public function index() {
         //Load the language file for this module
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
 
         //Set the title from the language file $_['heading_title'] string
         $this->document->setTitle($this->language->get('heading_title'));
 
         //create the table payson_order in the database
-        $this->load->model('module/paysondirect');
-        $this->model_module_paysondirect->createModuleTables();
+        $this->load->model('module/paysonCheckout2');
+        $this->model_module_paysonCheckout2->createModuleTables();
 
         //Load the settings model. You can also add any other models you want to load here.
         $this->load->model('setting/setting');
         //Save the settings if the user has submitted the admin form (ie if someone has pressed save).		
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('paysondirect', $this->request->post);
+            $this->model_setting_setting->editSetting('paysonCheckout2', $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -40,7 +40,7 @@ class ControllerPaymentPaysondirect extends Controller {
         $this->data['entry_logg'] = $this->language->get('entry_logg');
 
         $this->data['entry_method_mode'] = $this->language->get('entry_method_mode');
-        $this->data['paysondirect_mode'] = $this->language->get('payment_mode');
+        $this->data['paysonCheckout2_mode'] = $this->language->get('payment_mode');
         $this->data['text_method_mode_live'] = $this->language->get('text_method_mode_live');
         $this->data['text_method_mode_sandbox'] = $this->language->get('text_method_mode_sandbox');
 
@@ -151,176 +151,176 @@ class ControllerPaymentPaysondirect extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/paysondirect', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('payment/paysonCheckout2', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => ' :: '
         );
 
-        $this->data['action'] = $this->url->link('payment/paysondirect', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link('payment/paysonCheckout2', 'token=' . $this->session->data['token'], 'SSL');
 
         $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 
-        if (isset($this->request->post['paysondirect_modul_version'])) {
-            $this->data['paysondirect_modul_version'] = $this->request->post['paysondirect_modul_version'];
+        if (isset($this->request->post['paysonCheckout2_modul_version'])) {
+            $this->data['paysonCheckout2_modul_version'] = $this->request->post['paysonCheckout2_modul_version'];
         } else {
-            $this->data['paysondirect_modul_version'] = $this->config->get('paysondirect_modul_version');
+            $this->data['paysonCheckout2_modul_version'] = $this->config->get('paysonCheckout2_modul_version');
         }
 
-        if (isset($this->request->post['paysondirect_merchant_id'])) {
-            $this->data['paysondirect_merchant_id'] = $this->request->post['paysondirect_merchant_id'];
+        if (isset($this->request->post['paysonCheckout2_merchant_id'])) {
+            $this->data['paysonCheckout2_merchant_id'] = $this->request->post['paysonCheckout2_merchant_id'];
         } else {
-            $this->data['paysondirect_merchant_id'] = $this->config->get('paysondirect_merchant_id');
+            $this->data['paysonCheckout2_merchant_id'] = $this->config->get('paysonCheckout2_merchant_id');
         }
-        if (isset($this->request->post['paysondirect_api_key'])) {
-            $this->data['paysondirect_api_key'] = $this->request->post['paysondirect_api_key'];
+        if (isset($this->request->post['paysonCheckout2_api_key'])) {
+            $this->data['paysonCheckout2_api_key'] = $this->request->post['paysonCheckout2_api_key'];
         } else {
-            $this->data['paysondirect_api_key'] = $this->config->get('paysondirect_api_key');
-        }
-
-        if (isset($this->request->post['paysondirect_mode'])) {
-            $this->data['paysondirect_mode'] = $this->request->post['paysondirect_mode'];
-        } else {
-            $this->data['paysondirect_mode'] = $this->config->get('paysondirect_mode');
+            $this->data['paysonCheckout2_api_key'] = $this->config->get('paysonCheckout2_api_key');
         }
 
-        if (isset($this->request->post['paysondirect_secure_word'])) {
-            $this->data['paysondirect_secure_word'] = $this->request->post['paysondirect_secure_word'];
+        if (isset($this->request->post['paysonCheckout2_mode'])) {
+            $this->data['paysonCheckout2_mode'] = $this->request->post['paysonCheckout2_mode'];
         } else {
-            $this->data['paysondirect_secure_word'] = $this->config->get('paysondirect_secure_word');
+            $this->data['paysonCheckout2_mode'] = $this->config->get('paysonCheckout2_mode');
         }
 
-        if (isset($this->request->post['paysondirect_logg'])) {
-            $this->data['paysondirect_logg'] = $this->request->post['paysondirect_logg'];
+        if (isset($this->request->post['paysonCheckout2_secure_word'])) {
+            $this->data['paysonCheckout2_secure_word'] = $this->request->post['paysonCheckout2_secure_word'];
         } else {
-            $this->data['paysondirect_logg'] = $this->config->get('paysondirect_logg');
+            $this->data['paysonCheckout2_secure_word'] = $this->config->get('paysonCheckout2_secure_word');
         }
 
-        if (isset($this->request->post['paysondirect_total'])) {
-            $this->data['paysondirect_total'] = $this->request->post['paysondirect_total'];
+        if (isset($this->request->post['paysonCheckout2_logg'])) {
+            $this->data['paysonCheckout2_logg'] = $this->request->post['paysonCheckout2_logg'];
         } else {
-            $this->data['paysondirect_total'] = $this->config->get('paysondirect_total');
+            $this->data['paysonCheckout2_logg'] = $this->config->get('paysonCheckout2_logg');
         }
 
-        if (isset($this->request->post['paysondirect_order_status_id'])) {
-            $this->data['paysondirect_order_status_id'] = $this->request->post['paysondirect_order_status_id'];
+        if (isset($this->request->post['paysonCheckout2_total'])) {
+            $this->data['paysonCheckout2_total'] = $this->request->post['paysonCheckout2_total'];
         } else {
-            $this->data['paysondirect_order_status_id'] = $this->config->get('paysondirect_order_status_id');
+            $this->data['paysonCheckout2_total'] = $this->config->get('paysonCheckout2_total');
+        }
+
+        if (isset($this->request->post['paysonCheckout2_order_status_id'])) {
+            $this->data['paysonCheckout2_order_status_id'] = $this->request->post['paysonCheckout2_order_status_id'];
+        } else {
+            $this->data['paysonCheckout2_order_status_id'] = $this->config->get('paysonCheckout2_order_status_id');
         }
 
         $this->load->model('localisation/order_status');
 
         $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-        if (isset($this->request->post['paysondirect_geo_zone_id'])) {
-            $this->data['paysondirect_geo_zone_id'] = $this->request->post['paysondirect_geo_zone_id'];
+        if (isset($this->request->post['paysonCheckout2_geo_zone_id'])) {
+            $this->data['paysonCheckout2_geo_zone_id'] = $this->request->post['paysonCheckout2_geo_zone_id'];
         } else {
-            $this->data['paysondirect_geo_zone_id'] = $this->config->get('paysondirect_geo_zone_id');
+            $this->data['paysonCheckout2_geo_zone_id'] = $this->config->get('paysonCheckout2_geo_zone_id');
         }
 
         $this->load->model('localisation/geo_zone');
 
         $this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
-        if (isset($this->request->post['paysondirect_status'])) {
-            $this->data['paysondirect_status'] = $this->request->post['paysondirect_status'];
+        if (isset($this->request->post['paysonCheckout2_status'])) {
+            $this->data['paysonCheckout2_status'] = $this->request->post['paysonCheckout2_status'];
         } else {
-            $this->data['paysondirect_status'] = $this->config->get('paysondirect_status');
+            $this->data['paysonCheckout2_status'] = $this->config->get('paysonCheckout2_status');
         }
 
-        if (isset($this->request->post['paysondirect_sort_order'])) {
-            $this->data['paysondirect_sort_order'] = $this->request->post['paysondirect_sort_order'];
+        if (isset($this->request->post['paysonCheckout2_sort_order'])) {
+            $this->data['paysonCheckout2_sort_order'] = $this->request->post['paysonCheckout2_sort_order'];
         } else {
-            $this->data['paysondirect_sort_order'] = $this->config->get('paysondirect_sort_order');
+            $this->data['paysonCheckout2_sort_order'] = $this->config->get('paysonCheckout2_sort_order');
         }  
                 
-        if (isset($this->request->post['paysondirect_gui_verification'])) {
-            $this->data['paysondirect_gui_verification'] = $this->request->post['paysondirect_gui_verification'];
+        if (isset($this->request->post['paysonCheckout2_gui_verification'])) {
+            $this->data['paysonCheckout2_gui_verification'] = $this->request->post['paysonCheckout2_gui_verification'];
         } else {
-            $this->data['paysondirect_gui_verification'] = $this->config->get('paysondirect_gui_verification');
+            $this->data['paysonCheckout2_gui_verification'] = $this->config->get('PaysonCheckout2_gui_verification');
         }
 
-        if (isset($this->request->post['paysondirect_request_phone'])) {
-            $this->data['paysondirect_request_phone'] = $this->request->post['paysondirect_request_phone'];
+        if (isset($this->request->post['paysonCheckout2_request_phone'])) {
+            $this->data['paysonCheckout2_request_phone'] = $this->request->post['paysonCheckout2_request_phone'];
         } else {
-            $this->data['paysondirect_request_phone'] = $this->config->get('paysondirect_request_phone');
+            $this->data['paysonCheckout2_request_phone'] = $this->config->get('paysonCheckout2_request_phone');
         }
         
-        if (isset($this->request->post['paysondirect_color_scheme'])) {
-            $this->data['paysondirect_color_scheme'] = $this->request->post['paysondirect_color_scheme'];
+        if (isset($this->request->post['paysonCheckout2_color_scheme'])) {
+            $this->data['paysonCheckout2_color_scheme'] = $this->request->post['paysonCheckout2_color_scheme'];
         } else {
-            $this->data['paysondirect_color_scheme'] = $this->config->get('paysondirect_color_scheme');
+            $this->data['paysonCheckout2_color_scheme'] = $this->config->get('paysonCheckout2_color_scheme');
         }
         
-        if (isset($this->request->post['paysondirect_iframe_size_width'])) {
-            $this->data['paysondirect_iframe_size_width'] = $this->request->post['paysondirect_iframe_size_width'];
+        if (isset($this->request->post['paysonCheckout2_iframe_size_width'])) {
+            $this->data['paysonCheckout2_iframe_size_width'] = $this->request->post['paysonCheckout2_iframe_size_width'];
         } else {
-            if($this->config->get('paysondirect_iframe_size_width') == Null){
-                $this->data['paysondirect_iframe_size_width'] = '100';
+            if($this->config->get('paysonCheckout2_iframe_size_width') == Null){
+                $this->data['paysonCheckout2_iframe_size_width'] = '100';
             }else{
-                $this->data['paysondirect_iframe_size_width'] = $this->config->get('paysondirect_iframe_size_width');
+                $this->data['paysonCheckout2_iframe_size_width'] = $this->config->get('paysonCheckout2_iframe_size_width');
             }
         }
         
-        if (isset($this->request->post['paysondirect_iframe_size_width_type'])) {
-            $this->data['paysondirect_iframe_size_width_type'] = $this->request->post['paysondirect_iframe_size_width_type'];
+        if (isset($this->request->post['paysonCheckout2_iframe_size_width_type'])) {
+            $this->data['paysonCheckout2_iframe_size_width_type'] = $this->request->post['paysonCheckout2_iframe_size_width_type'];
         } else {
-            $this->data['paysondirect_iframe_size_width_type'] = $this->config->get('paysondirect_iframe_size_width_type');
+            $this->data['paysonCheckout2_iframe_size_width_type'] = $this->config->get('paysonCheckout2_iframe_size_width_type');
         }
         
-        if (isset($this->request->post['paysondirect_iframe_size_height'])) {
-            $this->data['paysondirect_iframe_size_height'] = $this->request->post['paysondirect_iframe_size_height'];
+        if (isset($this->request->post['paysonCheckout2_iframe_size_height'])) {
+            $this->data['paysonCheckout2_iframe_size_height'] = $this->request->post['paysonCheckout2_iframe_size_height'];
         } else {
-            if($this->config->get('paysondirect_iframe_size_height') == Null){
-                $this->data['paysondirect_iframe_size_height'] = '700';
+            if($this->config->get('paysonCheckout2_iframe_size_height') == Null){
+                $this->data['paysonCheckout2_iframe_size_height'] = '700';
             }else{
-                $this->data['paysondirect_iframe_size_height'] = $this->config->get('paysondirect_iframe_size_height');
+                $this->data['paysonCheckout2_iframe_size_height'] = $this->config->get('paysonCheckout2_iframe_size_height');
             }
         }
         
-        if (isset($this->request->post['paysondirect_iframe_size_height_type'])) {
-            $this->data['paysondirect_iframe_size_height_type'] = $this->request->post['paysondirect_iframe_size_height_type'];
+        if (isset($this->request->post['paysonCheckout2_iframe_size_height_type'])) {
+            $this->data['paysonCheckout2_iframe_size_height_type'] = $this->request->post['paysonCheckout2_iframe_size_height_type'];
         } else {
-            $this->data['paysondirect_iframe_size_height_type'] = $this->config->get('paysondirect_iframe_size_height_type');
+            $this->data['paysonCheckout2_iframe_size_height_type'] = $this->config->get('paysonCheckout2_iframe_size_height_type');
         }
-        if (isset($this->request->post['paysondirect_receipt'])) {
-            $this->data['paysondirect_receipt'] = $this->request->post['paysondirect_receipt'];
+        if (isset($this->request->post['paysonCheckout2_receipt'])) {
+            $this->data['paysonCheckout2_receipt'] = $this->request->post['paysonCheckout2_receipt'];
         } else {
-            $this->data['paysondirect_receipt'] = $this->config->get('paysondirect_receipt');
+            $this->data['paysonCheckout2_receipt'] = $this->config->get('paysonCheckout2_receipt');
         }
         
-        if (isset($this->request->post['paysondirect_ignored_order_totals'])) {
-            $this->data['paysondirect_ignored_order_totals'] = $this->request->post['paysondirect_ignored_order_totals'];
+        if (isset($this->request->post['paysonCheckout2_ignored_order_totals'])) {
+            $this->data['paysonCheckout2_ignored_order_totals'] = $this->request->post['paysonCheckout2_ignored_order_totals'];
         } else {
-            if ($this->config->get('paysondirect_ignored_order_totals') == null) {
-                $this->data['paysondirect_ignored_order_totals'] = 'sub_total, total, taxes';
+            if ($this->config->get('paysonCheckout2_ignored_order_totals') == null) {
+                $this->data['paysonCheckout2_ignored_order_totals'] = 'sub_total, total, taxes, tax';
             } else
-                $this->data['paysondirect_ignored_order_totals'] = $this->config->get('paysondirect_ignored_order_totals');
+                $this->data['paysonCheckout2_ignored_order_totals'] = $this->config->get('paysonCheckout2_ignored_order_totals');
         }
 
         $this->data['header'] = $this->load->controller('common/header');
         $this->data['column_left'] = $this->load->controller('common/column_left');
         $this->data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('payment/paysondirect.tpl', $this->data));
+        $this->response->setOutput($this->load->view('payment/paysonCheckout2.tpl', $this->data));
     }
 
     private function validate() {
 
-        if (!$this->user->hasPermission('modify', 'payment/paysondirect')) {
+        if (!$this->user->hasPermission('modify', 'payment/paysonCheckout2')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if (isset($this->request->post['paysondirect_mode']) and $this->request->post['paysondirect_mode'] != 0) {
+        if (isset($this->request->post['paysonCheckout2_mode']) and $this->request->post['paysonCheckout2_mode'] != 0) {
             
-            if (!isset($this->request->post['paysondirect_merchant_id']) || !$this->request->post['paysondirect_merchant_id']) {
+            if (!isset($this->request->post['paysonCheckout2_merchant_id']) || !$this->request->post['paysonCheckout2_merchant_id']) {
                 $this->error['merchant_id'] = $this->language->get('error_merchant_id');
             }
 
-            if (!isset($this->request->post['paysondirect_api_key']) || !$this->request->post['paysondirect_api_key']) {
+            if (!isset($this->request->post['paysonCheckout2_api_key']) || !$this->request->post['paysonCheckout2_api_key']) {
                 $this->error['api_key'] = $this->language->get('error_api_key');
             }
         }
-        if (isset($this->request->post['paysondirect_ignored_order_totals']) and !$this->request->post['paysondirect_ignored_order_totals']) {
+        if (isset($this->request->post['paysonCheckout2_ignored_order_totals']) and !$this->request->post['paysonCheckout2_ignored_order_totals']) {
             $this->error['ignored_order_totals'] = $this->language->get('error_ignored_order_totals');
         }
 

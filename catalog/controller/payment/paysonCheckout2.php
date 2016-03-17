@@ -1,27 +1,27 @@
 <?php
 
-class ControllerPaymentPaysondirect extends Controller {
+class ControllerPaymentPaysonCheckout2 extends Controller {
 
     private $testMode;
     private $api;
     private $data = array();
 
-    const MODULE_VERSION = 'paysonEmbedded_1.0.0.2';
+    const MODULE_VERSION = 'paysonEmbedded_1.0.1.0';
 
     function __construct($registry) {
         parent::__construct($registry);
-        $this->testMode = ($this->config->get('paysondirect_mode') == 0);
+        $this->testMode = ($this->config->get('paysonCheckout2_mode') == 0);
     }
 
     public function index() {
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
         $iframeSetup = array();
         if (isset($this->request->get['snippet'])) {
             $iframeSetup['snippet'] = $this->getSnippetUrl($this->request->get['snippet']);
-            $iframeSetup['width'] = (int) $this->config->get('paysondirect_iframe_size_width');
-            $iframeSetup['width_type'] = $this->config->get('paysondirect_iframe_size_width_type');
-            $iframeSetup['height'] = (int) $this->config->get('paysondirect_iframe_size_height');
-            $iframeSetup['height_type'] = $this->config->get('paysondirect_iframe_size_height_type');
+            $iframeSetup['width'] = (int) $this->config->get('paysonCheckout2_iframe_size_width');
+            $iframeSetup['width_type'] = $this->config->get('paysonCheckout2_iframe_size_width_type');
+            $iframeSetup['height'] = (int) $this->config->get('paysonCheckout2_iframe_size_height');
+            $iframeSetup['height_type'] = $this->config->get('paysonCheckout2_iframe_size_height_type');
             $iframeSetup['status'] = 'readyToPay';
             $iframeSetup['column_left'] = $this->load->controller('common/column_left');
             $iframeSetup['column_right'] = $this->load->controller('common/column_right');
@@ -31,21 +31,41 @@ class ControllerPaymentPaysondirect extends Controller {
             $iframeSetup['header'] = $this->load->controller('common/header');
         }
 
-        if (count($iframeSetup) > 0) {
-            $this->load->model('checkout/order');
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysondirect.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/paysondirect.tpl', $iframeSetup));
+        if (VERSION >= 2.2) {
+            if (count($iframeSetup) > 0) {
+                $this->load->model('checkout/order');
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout2.tpl')) {
+                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/payment/paysonCheckout2.tpl', $iframeSetup));
+                } else {
+                    $this->response->setOutput($this->load->view('payment/paysonCheckout2.tpl', $iframeSetup));
+                }
             } else {
-                $this->response->setOutput($this->load->view('default/template/payment/paysondirect.tpl', $iframeSetup));
+
+                $this->setupPurchaseData();
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout2.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/payment/paysonCheckout2.tpl', $this->data);
+                } else {
+                    $this->template = 'payment/paysonCheckout2.tpl';
+                    return $this->load->view('payment/paysonCheckout2.tpl', $this->data);
+                }
             }
         } else {
-
-            $this->setupPurchaseData();
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysondirect.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/payment/paysondirect.tpl', $this->data);
+            if (count($iframeSetup) > 0) {
+                $this->load->model('checkout/order');
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl')) {
+                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl', $iframeSetup));
+                } else {
+                    $this->response->setOutput($this->load->view('default/template/payment/paysonCheckout2.tpl', $iframeSetup));
+                }
             } else {
-                $this->template = 'default/template/payment/paysondirect.tpl';
-                return $this->load->view('default/template/payment/paysondirect.tpl', $this->data);
+
+                $this->setupPurchaseData();
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl', $this->data);
+                } else {
+                    $this->template = 'default/template/payment/paysonCheckout2.tpl';
+                    return $this->load->view('default/template/payment/paysonCheckout2.tpl', $this->data);
+                }
             }
         }
     }
@@ -57,28 +77,28 @@ class ControllerPaymentPaysondirect extends Controller {
     }
 
     public function confirm() {
-        if ($this->session->data['payment_method']['code'] == 'paysondirect') {
+        if ($this->session->data['payment_method']['code'] == 'paysonCheckout2') {
             $this->setupPurchaseData();
         }
     }
 
     private function setupPurchaseData() {
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
         $this->load->model('checkout/order');
 
         $order_data = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->data['store_name'] = html_entity_decode($order_data['store_name'], ENT_QUOTES, 'UTF-8');
         //Payson send the responds to the shop
-        $this->data['ok_url'] = $this->url->link('payment/paysondirect/returnFromPayson');
-        $this->data['ipn_url'] = $this->url->link('payment/paysondirect/paysonIpn&order_id=' . $this->session->data['order_id']);
-        $this->data['checkout_url'] = $this->url->link('payment/paysondirect/returnFromPayson&order_id=' . $this->session->data['order_id']);
+        $this->data['ok_url'] = $this->url->link('payment/paysonCheckout2/returnFromPayson');
+        $this->data['ipn_url'] = $this->url->link('payment/paysonCheckout2/paysonIpn&order_id=' . $this->session->data['order_id']);
+        $this->data['checkout_url'] = $this->url->link('payment/paysonCheckout2/returnFromPayson&order_id=' . $this->session->data['order_id']);
         $this->data['terms_url'] = $this->url->link('information/information/agree&information_id=5');
 
         $this->data['order_id'] = $order_data['order_id'];
         $this->data['amount'] = $this->currency->format($order_data['total'] * 100, $order_data['currency_code'], $order_data['currency_value'], false) / 100;
         $this->data['currency_code'] = $order_data['currency_code'];
         $this->data['language_code'] = $order_data['language_code'];
-        $this->data['salt'] = md5($this->config->get('paysondirect_secure_word')) . '1-' . $this->data['order_id'];
+        $this->data['salt'] = md5($this->config->get('paysonCheckout2_secure_word')) . '1-' . $this->data['order_id'];
         //Customer info
         $this->data['sender_email'] = $order_data['email'];
         $this->data['sender_first_name'] = html_entity_decode($order_data['payment_firstname'], ENT_QUOTES, 'UTF-8');
@@ -95,10 +115,10 @@ class ControllerPaymentPaysondirect extends Controller {
 
         if ($result->status == "created") {
             $this->data['checkoutId'] = $result->id;
-            $this->data['width'] = (int) $this->config->get('paysondirect_iframe_size_width');
-            $this->data['height'] = (int) $this->config->get('paysondirect_iframe_size_height');
-            $this->data['width_type'] = $this->config->get('paysondirect_iframe_size_width_type');
-            $this->data['height_type'] = $this->config->get('paysondirect_iframe_size_height_type');
+            $this->data['width'] = (int) $this->config->get('paysonCheckout2_iframe_size_width');
+            $this->data['height'] = (int) $this->config->get('paysonCheckout2_iframe_size_height');
+            $this->data['width_type'] = $this->config->get('paysonCheckout2_iframe_size_width_type');
+            $this->data['height_type'] = $this->config->get('paysonCheckout2_iframe_size_height_type');
             $this->data['testMode'] = !$this->testMode ? TRUE : FALSE;
             $this->data['snippet'] = $result->snippet;
             $this->data['status'] = $result->status;
@@ -110,14 +130,14 @@ class ControllerPaymentPaysondirect extends Controller {
 
     private function getPaymentURL() {
         require_once 'paysonEmbedded/paysonapi.php';
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
 
         $callPaysonApi = $this->getAPIInstanceMultiShop();
 
-        $paysonMerchant = new PaysonEmbedded\PaysonMerchant((!$this->testMode ? $this->config->get('paysondirect_merchant_id') : '4'), $this->data['checkout_url'], $this->data['ok_url'], $this->data['ipn_url'], $this->data['terms_url'], null, ('payson_opencart|' . $this->config->get('paysondirect_modul_version') . '|' . VERSION));
+        $paysonMerchant = new PaysonEmbedded\PaysonMerchant((!$this->testMode ? $this->config->get('paysonCheckout2_merchant_id') : '4'), $this->data['checkout_url'], $this->data['ok_url'], $this->data['ipn_url'], $this->data['terms_url'], null, ('payson_opencart|' . $this->config->get('paysonCheckout2_modul_version') . '|' . VERSION));
         $paysonMerchant->setReference($this->session->data['order_id']);
         $payData = new PaysonEmbedded\PayData();
-        $payData->setCurrencyCode(PaysonEmbedded\CurrencyCode::ConstantToString($this->currencyPaysondirect()));
+        $payData->setCurrencyCode(PaysonEmbedded\CurrencyCode::ConstantToString($this->currencypaysonCheckout2()));
         $payData->setOrderItems($this->getOrderItems());
         $callPaysonApi->setPayData($payData);
 
@@ -127,7 +147,7 @@ class ControllerPaymentPaysondirect extends Controller {
                 $this->data['sender_first_name'], $this->data['sender_last_name'], $this->data['sender_email'], $this->data['sender_telephone'], '', $this->data['sender_city'], $this->data['sender_countrycode'], $this->data['sender_postcode'], $this->data['sender_address'])
         );
 
-        $callPaysonApi->setGui(new PaysonEmbedded\Gui($this->languagePaysondirect(), $this->config->get('paysondirect_color_scheme'), $this->config->get('paysondirect_gui_verification'), (int) $this->config->get('paysondirect_request_phone')));
+        $callPaysonApi->setGui(new PaysonEmbedded\Gui($this->languagepaysonCheckout2(), $this->config->get('paysonCheckout2_color_scheme'), $this->config->get('paysonCheckout2_gui_verification'), (int) $this->config->get('paysonCheckout2_request_phone')));
 
         $paysonEmbeddedStatus = '';
         if ($this->getCheckoutIdPayson($this->session->data['order_id']) != Null) {
@@ -166,7 +186,7 @@ class ControllerPaymentPaysondirect extends Controller {
     public function returnFromPayson() {
         require_once 'paysonEmbedded/paysonapi.php';
         $this->load->model('checkout/order');
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
 
         $callPaysonApi = $this->getAPIInstanceMultiShop();
         if (count($callPaysonApi->getpaysonResponsErrors()) == 0) {
@@ -220,7 +240,7 @@ class ControllerPaymentPaysondirect extends Controller {
      * @param PaymentDetails $paymentDetails
      */
     private function handlePaymentDetails($paymentResponsObject, $orderId = 0, $ReturnCallUrl = Null) {
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
         $this->load->model('checkout/order');
 
         $orderIdTemp = $orderId ? $orderId : $this->session->data['order_id'];
@@ -237,7 +257,7 @@ class ControllerPaymentPaysondirect extends Controller {
 
         switch ($paymentStatus) {
             case "readyToShip":
-                $succesfullStatus = $this->config->get('paysondirect_order_status_id');
+                $succesfullStatus = $this->config->get('paysonCheckout2_order_status_id');
 
                 $comment = "Checkout ID: " . $paymentCheckoutId . "\n\n";
                 $comment .= "Payson status: " . $paymentStatus . "\n\n";
@@ -252,23 +272,23 @@ class ControllerPaymentPaysondirect extends Controller {
                                 shipping_city       = '" . $paymentResponsObject->customer->city . "', 
                                 shipping_country    = '" . $paymentResponsObject->customer->countryCode . "', 
                                 shipping_postcode   = '" . $paymentResponsObject->customer->postalCode . "',
-                                payment_code        = 'paysondirect'
+                                payment_code        = 'paysonCheckout2'
                                 WHERE order_id      = '" . $orderIdTemp . "'");
 
                 $this->writeArrayToLog($comment);
                 $this->model_checkout_order->addOrderHistory($orderIdTemp, $succesfullStatus, $comment, TRUE);
-                $showReceiptPage = $this->config->get('paysondirect_receipt');
+                $showReceiptPage = $this->config->get('paysonCheckout2_receipt');
 
                 if ($showReceiptPage == 1) {
                     $this->unsetData($orderIdTemp);
-                    $this->response->redirect($this->url->link('payment/paysondirect/index', 'snippet=' . $paymentResponsObject->snippet));
+                    $this->response->redirect($this->url->link('payment/paysonCheckout2/index', 'snippet=' . $paymentResponsObject->snippet));
                 } else {
                     $this->response->redirect($this->url->link('checkout/success'));
                 }
                 break;
             case "readyToPay":
                 if ($paymentResponsObject->id != Null) {
-                    $this->response->redirect($this->url->link('payment/paysondirect/index', 'snippet=' . $paymentResponsObject->snippet));
+                    $this->response->redirect($this->url->link('payment/paysonCheckout2/index', 'snippet=' . $paymentResponsObject->snippet));
                 }
                 break;
             case "denied":
@@ -292,7 +312,7 @@ class ControllerPaymentPaysondirect extends Controller {
     function logErrorsAndReturnThem($response) {
         $errors = $response->getResponseEnvelope()->getErrors();
 
-        if ($this->config->get('paysondirect_logg') == 1) {
+        if ($this->config->get('paysonCheckout2_logg') == 1) {
             $this->writeToLog(print_r($errors, true));
         }
 
@@ -322,8 +342,8 @@ class ControllerPaymentPaysondirect extends Controller {
          * For the use of our test or live environment use one following parameters:
          * TRUE: Use test environment, FALSE: use live environment */
         if (!$this->testMode) {
-            $merchant = explode('##', $this->config->get('paysondirect_merchant_id'));
-            $key = explode('##', $this->config->get('paysondirect_api_key'));
+            $merchant = explode('##', $this->config->get('paysonCheckout2_merchant_id'));
+            $key = explode('##', $this->config->get('paysonCheckout2_api_key'));
             $storeID = $this->config->get('config_store_id');
 
             $shopArray = $this->getCredentials();
@@ -340,7 +360,7 @@ class ControllerPaymentPaysondirect extends Controller {
     private function getOrderItems() {
         require_once 'paysonEmbedded/paysonapi.php';
 
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
 
         $orderId = $this->session->data['order_id'];
 
@@ -370,14 +390,16 @@ class ControllerPaymentPaysondirect extends Controller {
             $this->data['order_items'][] = new PaysonEmbedded\OrderItem(html_entity_decode($productTitle, ENT_QUOTES, 'UTF-8'), $product_price, $product['quantity'], $product['tax_rate']);
         }
 
-        $orderTotals = $this->getOrderTotals();
+		$orderTotals = VERSION >= 2.2 ? $this->getOrderTotals22() : $this->getOrderTotals();
+		
         foreach ($orderTotals as $orderTotal) {
             $orderTotalAmount = $this->currency->format($orderTotal['value'] * 100, $order_data['currency_code'], $order_data['currency_value'], false) / 100;
             if ($orderTotalAmount == null || $orderTotalAmount == 0) {
                 break;
             }
-            $orderTotalTemp = new PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount * (1 + $orderTotal['tax_rate'] / 100), 1, $orderTotal['tax_rate'] / 100);
-
+			
+            $orderTotalTemp = new PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount * (1 + (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100), 1, (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100);
+  
             if ($orderTotal['code'] == 'coupon') {
                 $orderTotalTemp->setType('discount');
             }
@@ -456,7 +478,7 @@ class ControllerPaymentPaysondirect extends Controller {
                 $total_data[$key]['tax_rate'] = '0';
             }
         }
-        $ignoredTotals = $this->config->get('paysondirect_ignored_order_totals');
+        $ignoredTotals = $this->config->get('paysonCheckout2_ignored_order_totals');
         if ($ignoredTotals == null)
             $ignoredTotals = 'sub_total, total, taxes';
 
@@ -468,6 +490,100 @@ class ControllerPaymentPaysondirect extends Controller {
         }
 
         return $total_data;
+    }
+	
+	private function getOrderTotals22() {
+        // Totals
+        $this->load->model('extension/extension');
+        $totals = array();
+        $taxes = $this->cart->getTaxes();
+        $total = 0;
+
+        // Because __call can not keep var references so we put them into an array.
+        $total_data = array(
+            'totals' => &$totals,
+            'taxes' => &$taxes,
+            'total' => &$total
+        );
+
+        $old_taxes = $taxes;
+        $lpa_tax = array();
+
+        $sort_order = array();
+
+        $results = $this->model_extension_extension->getExtensions('total');
+
+        foreach ($results as $key => $value) {
+            if (isset($value['code'])) {
+                $code = $value['code'];
+            } else {
+                $code = $value['key'];
+            }
+
+            $sort_order[$key] = $this->config->get($code . '_sort_order');
+        }
+
+        array_multisort($sort_order, SORT_ASC, $results);
+
+        foreach ($results as $result) {
+            if (isset($result['code'])) {
+                $code = $result['code'];
+            } else {
+                $code = $result['key'];
+            }
+
+            if ($this->config->get($code . '_status')) {
+                $this->load->model('total/' . $code);
+
+                // We have to put the totals in an array so that they pass by reference.
+                $this->{'model_total_' . $code}->getTotal($total_data);
+
+                if (!empty($totals[count($totals) - 1]) && !isset($totals[count($totals) - 1]['code'])) {
+                    $totals[count($totals) - 1]['code'] = $code;
+                }
+
+                $tax_difference = 0;
+
+                foreach ($taxes as $tax_id => $value) {
+                    if (isset($old_taxes[$tax_id])) {
+                        $tax_difference += $value - $old_taxes[$tax_id];
+                    } else {
+                        $tax_difference += $value;
+                    }
+                }
+
+                if ($tax_difference != 0) {
+                    $lpa_tax[$code] = $tax_difference;
+                }
+
+                $old_taxes = $taxes;
+            }
+        }
+
+        $sort_order = array();
+
+        foreach ($totals as $key => $value) {
+            $sort_order[$key] = $value['sort_order'];
+
+            if (isset($lpa_tax[$value['code']])) {
+                $total_data['totals'][$key]['lpa_tax'] = abs($lpa_tax[$value['code']] / $value['value'] * 100);
+            } else {
+                $total_data['totals'][$key]['lpa_tax'] = 0;
+            }
+        }
+
+        $ignoredTotals = $this->config->get('paysonCheckout2_ignored_order_totals');
+        if ($ignoredTotals == null)
+            $ignoredTotals = 'sub_total, total, tax';
+
+        $ignoredOrderTotals = array_map('trim', explode(',', $ignoredTotals));
+        foreach ($totals as $key => $orderTotal) {
+            if (in_array($orderTotal['code'], $ignoredOrderTotals)) {
+                unset($totals[$key]);
+            }
+        }
+
+        return $totals;
     }
 
     /**
@@ -565,7 +681,7 @@ class ControllerPaymentPaysondirect extends Controller {
 			unset($this->session->data['totals']);
     }
 
-    public function languagePaysondirect() {
+    public function languagepaysonCheckout2() {
         switch (strtoupper($this->data['language_code'])) {
             case "SE":
             case "SV":
@@ -581,7 +697,7 @@ class ControllerPaymentPaysondirect extends Controller {
         }
     }
 
-    public function currencyPaysondirect() {
+    public function currencypaysonCheckout2() {
         switch (strtoupper($this->data['currency_code'])) {
             case "SEK":
                 return "SEK";
@@ -597,24 +713,24 @@ class ControllerPaymentPaysondirect extends Controller {
      */
     function writeToLog($message, $paymentResponsObject = False) {
         $paymentDetailsFormat = "Payson reference:&#9;%s&#10;Correlation id:&#9;%s&#10;";
-        if ($this->config->get('paysondirect_logg') == 1) {
+        if ($this->config->get('paysonCheckout2_logg') == 1) {
 
             $this->log->write('PAYSON&#10;' . $message . '&#10;' . ($paymentResponsObject != false ? sprintf($paymentDetailsFormat, $paymentResponsObject->status, $paymentResponsObject->id) : '') . $this->writeModuleInfoToLog());
         }
     }
 
     private function writeArrayToLog($array, $additionalInfo = "") {
-        if ($this->config->get('paysondirect_logg') == 1) {
+        if ($this->config->get('paysonCheckout2_logg') == 1) {
             $this->log->write('PAYSON&#10;Additional information:&#9;' . $additionalInfo . '&#10;&#10;' . print_r($array, true) . '&#10;' . $this->writeModuleInfoToLog());
         }
     }
 
     private function writeModuleInfoToLog() {
-        return 'Module version: ' . $this->config->get('paysondirect_modul_version') . '&#10;------------------------------------------------------------------------&#10;';
+        return 'Module version: ' . $this->config->get('paysonCheckout2_modul_version') . '&#10;------------------------------------------------------------------------&#10;';
     }
 
     public function paysonApiError($error) {
-        $this->load->language('payment/paysondirect');
+        $this->load->language('payment/paysonCheckout2');
         $error_code = '<html>
                             <head>
                                 <script type="text/javascript"> 

@@ -1,6 +1,6 @@
 <?php
 
-class ModelModulePaysondirect extends Model {
+class ModelModulePaysonCheckout2 extends Model {
 
     public function createModuleTables() {
         $query = $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX .

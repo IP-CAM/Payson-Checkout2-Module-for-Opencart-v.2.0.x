@@ -232,11 +232,6 @@ namespace PaysonEmbedded {
             $this->allOrderData['status'] = $status;
         }
 
-        function logIt($what) {
-            $content = print_r($what, true);
-            file_put_contents("c:\phplog\log\magefast.txt", date("H:i:s") . "\n" . $content, FILE_APPEND);
-        }
-
     }
 
 }

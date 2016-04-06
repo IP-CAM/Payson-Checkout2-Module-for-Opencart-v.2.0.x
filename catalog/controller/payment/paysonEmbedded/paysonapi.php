@@ -198,8 +198,6 @@ namespace PaysonEmbedded {
 
         private function extractCheckoutId($result) {
             $checkoutId = null;
-            $this->logIt('################# HEAD ###############');
-            $this->logIt($result);
             if (preg_match('#Location: (.*)#', $result, $res)) {
                 $checkoutId = trim($res[1]); //print_r($res);
             }

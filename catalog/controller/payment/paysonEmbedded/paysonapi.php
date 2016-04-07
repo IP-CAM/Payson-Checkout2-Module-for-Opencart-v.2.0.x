@@ -154,7 +154,6 @@ namespace PaysonEmbedded {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $curlAction == "GET" ? NULL : json_encode($this->allOrderData));
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
             curl_setopt($ch, CURLOPT_HEADER, $curlAction == "GET" ? FALSE : TRUE);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
             $result = curl_exec($ch);
             //print_r($result);exit;

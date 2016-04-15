@@ -27,6 +27,8 @@ Module for OpenCart implementing Payson Checkout 2.0
 
 * Click Save.
 
+Delete the cache of your browser when switching between your test and production environment.
+
 ## Upgrade
 
 * You should have a BACKUP of your web store and database.

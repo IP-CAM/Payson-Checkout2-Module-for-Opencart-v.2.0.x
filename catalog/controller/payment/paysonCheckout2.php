@@ -682,9 +682,8 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
     }
 
     public function languagepaysonCheckout2() {
-        switch (strtoupper($this->data['language_code'])) {
-			case "SE-SE":
-            case "SV-SE":
+		$language = explode("-", $this->data['language_code']);
+		switch (strtoupper($language[0])) {  
             case "SE":
             case "SV":
                 return "SE";

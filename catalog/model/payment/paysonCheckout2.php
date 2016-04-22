@@ -3,6 +3,11 @@
 class ModelPaymentPaysonCheckout2 extends Model {
 
     private $currency_supported_by_p_direct = array('SEK', 'EUR');
+    private $minimumAmountSEK = 6;
+    private $minimumAmountEUR = 0.6;
+    private $maxAmountSEK = 30000;
+    private $maxAmountEUR = 3000;
+
 
     public function getMethod($address, $total) {
         $this->language->load('payment/paysonCheckout2');
@@ -18,10 +23,15 @@ class ModelPaymentPaysonCheckout2 extends Model {
         } else {
             $status = false;
         }
+        if(strtoupper($this->config->get('config_currency')) == 'SEK' && ($total < $this->minimumAmountSEK || $total > $this->maxAmountSEK)){
+            $status = false;
+        }
+        if(strtoupper($this->config->get('config_currency')) == 'EUR' && ($total < $this->minimumAmountEUR || $total > $this->maxAmountEUR)){
+            $status = false;
+        }
         if (!in_array(strtoupper($this->session->data['currency']), $this->currency_supported_by_p_direct)) {
             $status = false;
         }
-
 
         $method_data = array();
 

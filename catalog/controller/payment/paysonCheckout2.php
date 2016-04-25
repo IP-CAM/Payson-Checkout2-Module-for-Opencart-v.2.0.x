@@ -397,7 +397,9 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         foreach ($orderTotals as $orderTotal) {
             $orderTotalType = PaysonEmbedded\OrderItemType::SERVICE;
 
-            $orderTotalAmount = $this->currency->format($orderTotal['value'] * 100, $order_data['currency_code'], $order_data['currency_value'], false) / 100;
+			$orderTotalAmountTemp = ($orderTotal['value'])* (1 + (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100);
+			$orderTotalAmount = $this->currency->format($orderTotalAmountTemp, $order_data['currency_code'], $order_data['currency_value'], false) ;
+			
             if ($orderTotalAmount == null || $orderTotalAmount == 0) {
                 continue;
             }
@@ -417,7 +419,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
                 $orderTotalType = PaysonEmbedded\OrderItemType::SERVICE;
             }
 
-            $payData->AddOrderItem(new PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount * (1 + (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100), 1, (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100, $orderTotal['code'], $orderTotalType));
+            $payData->AddOrderItem(new PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount, 1, (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100, $orderTotal['code'], $orderTotalType));
         }
         if ($this->config->get('paysonCheckout2_logg') == 1) {
             $this->writeArrayToLog($payData->toJson(), 'Items list: ');

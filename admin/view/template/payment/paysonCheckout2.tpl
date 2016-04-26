@@ -184,17 +184,11 @@
                                 <option value="gray" selected="selected"><?php echo $text_color_scheme_gray; ?></option>
                                 <option> <?php echo $text_color_scheme_blue; ?></option>
                                 <option><?php echo $text_color_scheme_white; ?></option>
-                                <option> <?php echo $text_color_scheme_graysemi; ?></option>
-                                <option><?php echo $text_color_scheme_pitchblack; ?></option>    
-                                <option><?php echo $text_color_scheme_bright; ?></option> 
                                 <?php } else { ?>
                                 <option><?php echo $paysonCheckout2_color_scheme; ?></option>
                                 <option> <?php echo $text_color_scheme_gray; ?></option>
                                 <option> <?php echo $text_color_scheme_blue; ?></option>
                                 <option><?php echo $text_color_scheme_white; ?></option>
-                                <option> <?php echo $text_color_scheme_graysemi; ?></option>
-                                <option><?php echo $text_color_scheme_pitchblack; ?></option>    
-                                <option><?php echo $text_color_scheme_bright; ?></option>  
                                 <?php } ?>
                             </select>
                         </div>

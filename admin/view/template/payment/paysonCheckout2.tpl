@@ -182,13 +182,13 @@
                             <select name="paysonCheckout2_color_scheme" id="input-color-scheme" class="form-control">   
                                 <?php if (!$paysonCheckout2_color_scheme) { ?>
                                 <option value="gray" selected="selected"><?php echo $text_color_scheme_gray; ?></option>
-                                <option> <?php echo $text_color_scheme_blue; ?></option>
-                                <option><?php echo $text_color_scheme_white; ?></option>
+                                <option value="blue"> <?php echo $text_color_scheme_blue; ?></option>
+                                <option value="white"><?php echo $text_color_scheme_white; ?></option>
                                 <?php } else { ?>
                                 <option><?php echo $paysonCheckout2_color_scheme; ?></option>
-                                <option> <?php echo $text_color_scheme_gray; ?></option>
-                                <option> <?php echo $text_color_scheme_blue; ?></option>
-                                <option><?php echo $text_color_scheme_white; ?></option>
+                                <option value="gray"> <?php echo $text_color_scheme_gray; ?></option>
+                                <option value="blue"> <?php echo $text_color_scheme_blue; ?></option>
+                                <option value="white"><?php echo $text_color_scheme_white; ?></option>
                                 <?php } ?>
                             </select>
                         </div>

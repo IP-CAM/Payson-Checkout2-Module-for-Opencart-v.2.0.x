@@ -20,7 +20,6 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['text_wait'] = $this->language->get('text_wait');
 
-        $iframeSetup = array();
         if (isset($this->request->get['snippet'])) {
             $iframeSetup['snippet'] = $this->getSnippetUrl($this->request->get['snippet']);
             $iframeSetup['width'] = (int) $this->config->get('paysonCheckout2_iframe_size_width');

@@ -46,10 +46,20 @@ if (isset($snippet)){
 ?>
 <script type="text/javascript"><!--  
 
-    // QUICH AJAX CHECKOUT OPEN CART FIX -> START
+   // QUICH AJAX CHECKOUT OPEN CART FIX -> START
     document.paysonQuickCheckoutTracker = function() {
         try {
-            var isPayson = document.getElementById("paysonTracker");
+			// Check payment method
+			var isPayson = document.getElementById("paysonTracker");
+			
+			var paymentForm = document.getElementById('payment_method_form');
+			if(paymentForm) {
+				var paysonPaymentMethod = document.getElementById('paysonCheckout2');
+				if(paysonPaymentMethod) {
+					isPayson = paysonPaymentMethod.checked;
+				}
+			}
+			
             document.getElementById("confirm_view").style.display = (isPayson?"none":"block");
             document.getElementById("payment_address").parentElement.style.display = (isPayson?"none":"block");
             document.getElementById("payment_view").parentElement.parentElement.parentElement.className = (isPayson?"col-md-12":"col-md-8");

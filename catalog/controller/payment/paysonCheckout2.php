@@ -307,17 +307,26 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
                     $this->testMode ? $comment .= "\n\nPayment mode: " . 'TEST MODE' : '';
                 }
                 
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET 
-								firstname           = '" . $paymentResponsObject->customer->firstName . "',
-                                lastname            = '" . $paymentResponsObject->customer->lastName . "',
-                                telephone           = '" . ($paymentResponsObject->customer->phone?$paymentResponsObject->customer->phone:'')."',
-                                shipping_firstname  = '" . $paymentResponsObject->customer->firstName . "',
-                                shipping_lastname   = '" . $paymentResponsObject->customer->lastName . "',
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET
+                                firstname  = '" . $paymentResponsObject->customer->firstName . "',
+                                lastname  = '" . $paymentResponsObject->customer->lastName . "',
+                                telephone  = '" . ($paymentResponsObject->customer->phone?$paymentResponsObject->customer->phone:'')."',
                                 email               = '" . $paymentResponsObject->customer->email . "',
+								
+								payment_firstname  = '" . $paymentResponsObject->customer->firstName . "',
+                                payment_lastname   = '" . $paymentResponsObject->customer->lastName . "',
+                                payment_address_1  = '" . $paymentResponsObject->customer->street . "',
+                                payment_city       = '" . $paymentResponsObject->customer->city . "', 
+                                payment_country    = '" . $paymentResponsObject->customer->countryCode . "', 
+                                payment_postcode   = '" . $paymentResponsObject->customer->postalCode . "',
+								
+								shipping_firstname  = '" . $paymentResponsObject->customer->firstName . "',
+                                shipping_lastname   = '" . $paymentResponsObject->customer->lastName . "',
                                 shipping_address_1  = '" . $paymentResponsObject->customer->street . "',
                                 shipping_city       = '" . $paymentResponsObject->customer->city . "', 
                                 shipping_country    = '" . $paymentResponsObject->customer->countryCode . "', 
                                 shipping_postcode   = '" . $paymentResponsObject->customer->postalCode . "',
+								
                                 payment_code        = 'paysonCheckout2'
                                 WHERE order_id      = '" . $orderIdTemp . "'");
                 

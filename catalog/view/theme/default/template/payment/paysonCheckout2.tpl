@@ -8,7 +8,7 @@ if (isset($snippet)){
         //Show the snippet by readyToPay or as reci...
         ?>
          <div class="container"><?php echo $content_top; ?>
-            <iframe id='checkoutIframe' name='checkoutIframe' style=<?php echo $style ?> src='<?php echo $snippet ?>'frameborder='0'  scrolling='no'>> </iframe>
+            <iframe id='checkoutIframe' name='checkoutIframe' style=<?php echo $style ?> src='<?php echo $snippet ?>' frameborder='0'  scrolling='no'> </iframe>
          </div>  
         
         <?php 

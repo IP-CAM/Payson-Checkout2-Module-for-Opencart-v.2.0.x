@@ -38,7 +38,8 @@ class ModelPaymentPaysonCheckout2 extends Model {
         if ($status) {
             $method_data = array(
                 'code' => 'paysonCheckout2',
-                'title' => 'Payson Checkout 2.0<br />',
+				'image' => 'https://www.payson.se/sites/all/files/images/external/payson_opencart.png',
+                'title' => 'Faktura, kort, bankbetalning<br />',
                 'terms' => '',
                 'sort_order' => $this->config->get('paysonCheckout2_sort_order')
             );

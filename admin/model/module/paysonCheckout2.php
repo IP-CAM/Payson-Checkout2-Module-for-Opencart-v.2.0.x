@@ -5,7 +5,7 @@ class ModelModulePaysonCheckout2 extends Model {
     public function createModuleTables() {
         $query = $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX .
                 "payson_embedded_order` (
-                    `payson_embedded_id` int(11) NULL AUTO_INCREMENT,
+                    `payson_embedded_id` int(11) AUTO_INCREMENT,
                     `order_id` int(15) NOT NULL,
                     `checkout_id` varchar(40) DEFAULT NULL,
                     `purchase_id` varchar(50) DEFAULT NULL,

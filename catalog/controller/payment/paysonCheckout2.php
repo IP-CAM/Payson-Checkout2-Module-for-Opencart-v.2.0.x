@@ -334,8 +334,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
                     $this->writeArrayToLog($comment);
                 }
 
-                
-                $this->model_checkout_order->addOrderHistory($orderIdTemp, $succesfullStatus, $comment, TRUE);
+                $this->model_checkout_order->addOrderHistory($orderIdTemp, $succesfullStatus, $comment, false, true);
                 $showReceiptPage = $this->config->get('paysonCheckout2_receipt');
 
                 if ($showReceiptPage == 1) {

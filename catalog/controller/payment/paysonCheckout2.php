@@ -465,6 +465,10 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
                 $orderTotalType = PaysonEmbedded\OrderItemType::SERVICE;
             }
 
+            if($orderTotalAmount < 0) {
+                $orderTotalType = PaysonEmbedded\OrderItemType::DISCOUNT;
+            } 
+            
             $payData->AddOrderItem(new PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount, 1, (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100, $orderTotal['code'], $orderTotalType));
         }
         if ($this->config->get('paysonCheckout2_logg') == 1) {

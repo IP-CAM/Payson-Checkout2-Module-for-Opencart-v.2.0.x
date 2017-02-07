@@ -140,7 +140,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         $this->load->language('payment/paysonCheckout2');
 
         $callPaysonApi = $this->getAPIInstanceMultiShop();
-        $paysonMerchant = new PaysonEmbedded\Merchant($this->data['checkout_url'], $this->data['ok_url'], $this->data['ipn_url'], $this->data['terms_url'], null, ('opencart_embedded|' . $this->config->get('paysonCheckout2_modul_version') . '|' . VERSION));
+        $paysonMerchant = new PaysonEmbedded\Merchant($this->data['checkout_url'], $this->data['ok_url'], $this->data['ipn_url'], $this->data['terms_url'], null, ('PaysonCheckout2.0_Opencart|' . $this->config->get('paysonCheckout2_modul_version') . '|' . VERSION));
         $paysonMerchant->reference = $this->session->data['order_id'];
         $payData = new PaysonEmbedded\PayData($this->currencypaysonCheckout2());
 
@@ -394,6 +394,11 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
             $key = explode('##', $this->config->get('paysonCheckout2_api_key'));
             $storeID = $this->config->get('config_store_id');
 
+            if(!isset($storeID)){
+                $message = '<Payson OpenCart Checkout 2.0 - Multishop-Exception>  Undefined variable: storeID';
+                $this->writeToLog($message);
+            }
+            
             $shopArray = $this->getCredentials();
             $multiStore = array_search($storeID, $shopArray);
 

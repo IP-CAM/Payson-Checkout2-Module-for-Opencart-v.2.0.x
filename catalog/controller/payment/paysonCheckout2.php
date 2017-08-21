@@ -751,7 +751,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         switch (strtoupper($language[0])) {    
             case "SE":
             case "SV":
-                return "SE";
+                return "SV";
             case "FI":
                 return "FI";
             case "DK":

@@ -6,7 +6,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
     private $api;
     private $data = array();
 
-    const MODULE_VERSION = 'paysonEmbedded_1.0.1.4';
+    const MODULE_VERSION = 'paysonEmbedded_1.0.1.7';
 
     function __construct($registry) {
         parent::__construct($registry);
@@ -448,15 +448,20 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         foreach ($orderTotals as $orderTotal) {
             $orderTotalType = PaysonEmbedded\OrderItemType::SERVICE;
 
-			$orderTotalAmountTemp = ($orderTotal['value'])* (1 + (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100);
-			$orderTotalAmount = $this->currency->format($orderTotalAmountTemp, $order_data['currency_code'], $order_data['currency_value'], false) ;
-			
-            if ($orderTotalAmount == null || $orderTotalAmount == 0) {
+            $orderTotalAmountTemp = $this->currency->format($orderTotal['value'] * 100, $order_data['currency_code'], $order_data['currency_value'], false) / 100;
+ 
+            $taxAmount = (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']);
+
+            if ($orderTotalAmountTemp == null || $orderTotalAmountTemp == 0) {
                 continue;
             }
 
-            //$orderTotalTemp = new PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount * (1 + (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100), 1, (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100);
-            // $payData->AddOrderItem(new  PaysonEmbedded\OrderItem(html_entity_decode($orderTotal['title'], ENT_QUOTES, 'UTF-8'), $orderTotalAmount * (1 + (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100), 1, (VERSION >= 2.2 ? $orderTotal['lpa_tax'] : $orderTotal['tax_rate']) / 100));
+            $orderTotalAmount = 0;
+            if($orderTotal['sort_order'] >= $this->config->get('tax_sort_order')){
+                $orderTotalAmount = $orderTotalAmountTemp; 
+            }else{
+                $orderTotalAmount = $orderTotalAmountTemp * (1 + ($taxAmount > 0 ? $taxAmount / 100 : 0));
+            }
 
             if ($orderTotal['code'] == 'coupon') {
                 $orderTotalType = PaysonEmbedded\OrderItemType::DISCOUNT;

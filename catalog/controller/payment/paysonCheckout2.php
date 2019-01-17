@@ -22,7 +22,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         $this->data['country_code'] = isset($this->session->data['payment_address']['iso_code_2'])? $this->session->data['payment_address']['iso_code_2'] : NULL;
         $this->data['customerIsLogged'] = !$this->customer->isLogged() ? 0 : 1 ;  
                 
-        if($this->data['registered_customer']&&!$this->customer->isLogged()){
+        if($this->config->get('paysonCheckout2_request_registered_customer') && !$this->customer->isLogged()){
             
             if (VERSION >= 2.2) {
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout_registered_customer.tpl')) {

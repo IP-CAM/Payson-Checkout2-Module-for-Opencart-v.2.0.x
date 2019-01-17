@@ -177,6 +177,21 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-registered-customer"><span data-toggle="tooltip" title="<?php echo $help_request_registered_customer; ?>"><?php echo $entry_registered_customer; ?></span></label>
+                        <div class="col-sm-10">
+                            <select name="paysonCheckout2_request_registered_customer" id="input-registered-customer" class="form-control">
+                                <?php if ($paysonCheckout2_request_registered_customer) { ?>
+                                <option value="1" selected="selected"><?php echo $text_registered_customer_yes; ?></option>
+                                <option value="0"><?php echo $text_registered_customer_no; ?></option>
+                                <?php } else { ?>
+                                <option value="1"><?php echo $text_registered_customer_yes; ?></option>
+                                <option value="0" selected="selected"><?php echo $text_registered_customer_no; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-color-scheme"><span data-toggle="tooltip" title="<?php echo $help_color_scheme; ?>"><?php echo $entry_color_scheme; ?></span></label>
                         <div class="col-sm-10">
                             <select name="paysonCheckout2_color_scheme" id="input-color-scheme" class="form-control">   

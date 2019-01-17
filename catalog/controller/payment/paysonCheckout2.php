@@ -6,7 +6,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
     private $api;
     private $data = array();
 
-    const MODULE_VERSION = 'paysonEmbedded_1.0.1.7';
+    const MODULE_VERSION = 'paysonEmbedded_1.0.1.8';
 
     function __construct($registry) {
         parent::__construct($registry);
@@ -17,63 +17,82 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         $this->load->language('payment/paysonCheckout2');
         $iframeSetup = array();
         
-             $this->data['error_checkout_id'] = $this->language->get('error_checkout_id');
-            $this->data['info_checkout'] = $this->language->get('info_checkout');
-            $this->data['country_code'] = isset($this->session->data['payment_address']['iso_code_2'])? $this->session->data['payment_address']['iso_code_2'] : NULL;
-            $this->data['customerIsLogged'] = $this->customer->isLogged() == 1 ? true : false ;   
+        $this->data['error_checkout_id'] = $this->language->get('error_checkout_id');
+        $this->data['info_checkout'] = $this->language->get('info_checkout');
+        $this->data['country_code'] = isset($this->session->data['payment_address']['iso_code_2'])? $this->session->data['payment_address']['iso_code_2'] : NULL;
+        $this->data['customerIsLogged'] = !$this->customer->isLogged() ? 0 : 1 ;  
+                
+        if($this->data['registered_customer']&&!$this->customer->isLogged()){
             
-        if (isset($this->request->get['snippet'])) {
-            $iframeSetup['snippet'] = $this->getSnippetUrl($this->request->get['snippet']);
-            $iframeSetup['width'] = (int) $this->config->get('paysonCheckout2_iframe_size_width');
-            $iframeSetup['width_type'] = $this->config->get('paysonCheckout2_iframe_size_width_type');
-            $iframeSetup['height'] = (int) $this->config->get('paysonCheckout2_iframe_size_height');
-            $iframeSetup['height_type'] = $this->config->get('paysonCheckout2_iframe_size_height_type');
-            $iframeSetup['status'] = 'readyToPay';
-            $iframeSetup['column_left'] = $this->load->controller('common/column_left');
-            $iframeSetup['column_right'] = $this->load->controller('common/column_right');
-            $iframeSetup['content_top'] = $this->load->controller('common/content_top');
-            $iframeSetup['content_bottom'] = $this->load->controller('common/content_bottom');
-            $iframeSetup['footer'] = $this->load->controller('common/footer');
-            $iframeSetup['header'] = $this->load->controller('common/header');
-        }
+            if (VERSION >= 2.2) {
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout_registered_customer.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/payment/paysonCheckout_registered_customer.tpl', $this->data);
+                } else {
+                    $this->template = 'payment/paysonCheckout_registered_customer.tpl';
+                    return $this->load->view('payment/paysonCheckout_registered_customer.tpl', $this->data);
+                }
+            }else{
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout_registered_customer.tpl')) {
+                    return $this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout_registered_customer.tpl', $this->data);
+                } else {
+                    return $this->load->view('default/template/payment/paysonCheckout_registered_customer.tpl', $this->data);
+                }  
+            }  
+                    
+        }else{    
+	        if (isset($this->request->get['snippet'])) {
+	            $iframeSetup['snippet'] = $this->getSnippetUrl($this->request->get['snippet']);
+	            $iframeSetup['width'] = (int) $this->config->get('paysonCheckout2_iframe_size_width');
+	            $iframeSetup['width_type'] = $this->config->get('paysonCheckout2_iframe_size_width_type');
+	            $iframeSetup['height'] = (int) $this->config->get('paysonCheckout2_iframe_size_height');
+	            $iframeSetup['height_type'] = $this->config->get('paysonCheckout2_iframe_size_height_type');
+	            $iframeSetup['status'] = 'readyToPay';
+	            $iframeSetup['column_left'] = $this->load->controller('common/column_left');
+	            $iframeSetup['column_right'] = $this->load->controller('common/column_right');
+	            $iframeSetup['content_top'] = $this->load->controller('common/content_top');
+	            $iframeSetup['content_bottom'] = $this->load->controller('common/content_bottom');
+	            $iframeSetup['footer'] = $this->load->controller('common/footer');
+	            $iframeSetup['header'] = $this->load->controller('common/header');
+	        }
 
-        if (VERSION >= 2.2) {
-            if (count($iframeSetup) > 0) {
-                $this->load->model('checkout/order');
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout2.tpl')) {
-                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/payment/paysonCheckout2.tpl', $iframeSetup));
-                } else {
-                    $this->response->setOutput($this->load->view('payment/paysonCheckout2.tpl', $iframeSetup));
-                }
-            } else {
+	        if (VERSION >= 2.2) {
+	            if (count($iframeSetup) > 0) {
+	                $this->load->model('checkout/order');
+	                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout2.tpl')) {
+	                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/payment/paysonCheckout2.tpl', $iframeSetup));
+	                } else {
+	                    $this->response->setOutput($this->load->view('payment/paysonCheckout2.tpl', $iframeSetup));
+	                }
+	            } else {
 
-                $this->setupPurchaseData();
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout2.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/payment/paysonCheckout2.tpl', $this->data);
-                } else {
-                    $this->template = 'payment/paysonCheckout2.tpl';
-                    return $this->load->view('payment/paysonCheckout2.tpl', $this->data);
-                }
-            }
-        } else {
-            if (count($iframeSetup) > 0) {
-                $this->load->model('checkout/order');
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl')) {
-                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl', $iframeSetup));
-                } else {
-                    $this->response->setOutput($this->load->view('default/template/payment/paysonCheckout2.tpl', $iframeSetup));
-                }
-            } else {
+	                $this->setupPurchaseData();
+	                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/paysonCheckout2.tpl')) {
+	                    return $this->load->view($this->config->get('config_template') . '/payment/paysonCheckout2.tpl', $this->data);
+	                } else {
+	                    $this->template = 'payment/paysonCheckout2.tpl';
+	                    return $this->load->view('payment/paysonCheckout2.tpl', $this->data);
+	                }
+	            }
+	        } else {
+	            if (count($iframeSetup) > 0) {
+	                $this->load->model('checkout/order');
+	                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl')) {
+	                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl', $iframeSetup));
+	                } else {
+	                    $this->response->setOutput($this->load->view('default/template/payment/paysonCheckout2.tpl', $iframeSetup));
+	                }
+	            } else {
 
-                $this->setupPurchaseData();
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl')) {
-                    return $this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl', $this->data);
-                } else {
-                    $this->template = 'default/template/payment/paysonCheckout2.tpl';
-                    return $this->load->view('default/template/payment/paysonCheckout2.tpl', $this->data);
-                }
-            }
-        }
+	                $this->setupPurchaseData();
+	                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl')) {
+	                    return $this->load->view($this->config->get('config_template') . '/template/payment/paysonCheckout2.tpl', $this->data);
+	                } else {
+	                    $this->template = 'default/template/payment/paysonCheckout2.tpl';
+	                    return $this->load->view('default/template/payment/paysonCheckout2.tpl', $this->data);
+	                }
+	            }
+	        }
+	    }
     }
 
     public function getSnippetUrl($snippet) {
@@ -669,7 +688,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
                         currency_code                 = 'currency_code',
                         tracking_id                   = 'tracking_id',
                         type                          = 'type',
-                        shippingAddress_name          = '" . $paymentDetails->customer->firstName . "', 
+                        shippingAddress_name          = '" . str_replace( array( '\'', '"', ',' , ';', '<', '>', '&' ), ' ', $paymentDetails->customer->firstName) . "',
                         shippingAddress_lastname      = '" . $paymentDetails->customer->lastName . "', 
                         shippingAddress_street_ddress = '" . $paymentDetails->customer->street . "',
                         shippingAddress_postal_code   = '" . $paymentDetails->customer->postalCode . "',

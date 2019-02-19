@@ -26,6 +26,9 @@ $_['secure_word'] = 'Secure word';
 
 $_['entry_total'] = 'Total';
 $_['entry_order_status'] = 'Order Status';
+$_['entry_order_status_shipped'] = 'Order Status Shipped';
+$_['entry_order_status_canceled'] = 'Order Status Canceled';
+$_['entry_order_status_refunded'] = 'Order Status Refunded';
 $_['entry_geo_zone'] = 'Geo Zone';
 $_['entry_status'] = 'Status';
 $_['entry_sort_order'] = 'Sort Order';
@@ -85,4 +88,9 @@ $_['help_iframe_size_width_type'] = 'Select the width of iframe';
 $_['help_total'] = 'The checkout total the order must reach before this payment method becomes active';
 $_['help_receipt'] = 'Select Yes for Payson receipt or No for Opencart receipt';
 $_['help_totals_to_ignore'] = 'Comma separated list with order totals not to send to payson';
+$_['help_order_status'] = 'Set by OpenCart after the customer has completed a payment or when an invoice can be sent.';
+$_['help_order_status_shipped'] = 'Notify Payson that the order has been shipped';
+$_['help_order_status_canceled'] = 'Notify Payson that the order has been canceled';
+$_['help_order_status_refunded'] = 'Notify Payson that the order has been refunded';
+?>
 ?>

@@ -49,6 +49,9 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         $this->data['text_all_zones'] = $this->language->get('text_all_zones');
 
         $this->data['entry_order_status'] = $this->language->get('entry_order_status'); 
+        $this->data['entry_order_status_shipped'] = $this->language->get('entry_order_status_shipped'); 
+        $this->data['entry_order_status_canceled'] = $this->language->get('entry_order_status_canceled'); 
+        $this->data['entry_order_status_refunded'] = $this->language->get('entry_order_status_refunded'); 
         
         $this->data['entry_status'] = $this->language->get('entry_status');
         
@@ -112,6 +115,9 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
 		$this->data['help_receipt'] = $this->language->get('help_receipt');		
         $this->data['help_totals_to_ignore'] = $this->language->get('help_totals_to_ignore');
         $this->data['help_method_mode'] = $this->language->get('help_method_mode');
+        $this->data['help_order_status_shipped'] = $this->language->get('help_order_status_shipped');
+        $this->data['help_order_status_canceled'] = $this->language->get('help_order_status_canceled');
+        $this->data['help_order_status_refunded'] = $this->language->get('help_order_status_refunded');
 
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];
@@ -208,8 +214,34 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
 
         if (isset($this->request->post['paysonCheckout2_order_status_id'])) {
             $this->data['paysonCheckout2_order_status_id'] = $this->request->post['paysonCheckout2_order_status_id'];
-        } else {
+        } elseif ($this->config->get('paysonCheckout2_order_status_id') !== null) {
             $this->data['paysonCheckout2_order_status_id'] = $this->config->get('paysonCheckout2_order_status_id');
+        } else {
+            $this->data['paysonCheckout2_order_status_id'] = 5;
+        }
+        
+        if (isset($this->request->post['paysonCheckout2_order_status_shipped_id'])) {
+            $this->data['paysonCheckout2_order_status_shipped_id'] = $this->request->post['paysonCheckout2_order_status_shipped_id'];
+        } elseif ($this->config->get('paysonCheckout2_order_status_shipped_id') !== null) {
+            $this->data['paysonCheckout2_order_status_shipped_id'] = $this->config->get('paysonCheckout2_order_status_shipped_id');
+        } else {
+            $this->data['paysonCheckout2_order_status_shipped_id'] = 1; //Pending
+        }
+
+        if (isset($this->request->post['paysonCheckout2_order_status_canceled_id'])) {
+            $this->data['paysonCheckout2_order_status_canceled_id'] = $this->request->post['paysonCheckout2_order_status_canceled_id'];
+        } elseif ($this->config->get('paysonCheckout2_order_status_canceled_id') !== null) {
+            $this->data['paysonCheckout2_order_status_canceled_id'] = $this->config->get('paysonCheckout2_order_status_canceled_id');
+        }else {
+            $this->data['paysonCheckout2_order_status_canceled_id'] = 1; //Pending
+        }
+
+        if (isset($this->request->post['paysonCheckout2_order_status_refunded_id'])) {
+            $this->data['paysonCheckout2_order_status_refunded_id'] = $this->request->post['paysonCheckout2_order_status_refunded_id'];
+        } elseif($this->config->get('paysonCheckout2_order_status_refunded_id') !== null) {
+            $this->data['paysonCheckout2_order_status_refunded_id'] = $this->config->get('paysonCheckout2_order_status_refunded_id');
+        } else {
+            $this->data['paysonCheckout2_order_status_refunded_id'] = 1; ////Pending
         }
 
         $this->load->model('localisation/order_status');

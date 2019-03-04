@@ -373,5 +373,29 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
             return false;
         }
     }
+
+    public function install() {
+
+        if (version_compare(VERSION, '2.0.1', '>=')) {
+            $this->load->model('extension/event');
+            $this->model_extension_event->addEvent('payson_status_capture', 'post.order.history.add', 'payment/paysonCheckout2/capture');
+                
+        } else {
+                $this->load->model('tool/event');
+                $this->model_tool_event->addEvent('payson_status_capture', 'post.order.history.add', 'payment/paysonCheckout2/capture');
+        }    
+    }
+         
+    public function uninstall() {
+        $this->load->model('setting/setting');  
+
+        if (version_compare(VERSION, '2.0.1', '>=')) {
+                $this->load->model('extension/event');
+                $this->model_extension_event->deleteEvent('payson_status_capture');
+        } else {
+                $this->load->model('tool/event');
+                $this->model_tool_event->deleteEvent('payson_status_capture');
+        }
+    }
 }
 ?>

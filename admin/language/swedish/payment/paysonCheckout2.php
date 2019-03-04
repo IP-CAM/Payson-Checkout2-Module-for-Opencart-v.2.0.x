@@ -85,9 +85,10 @@ $_['help_iframe_size_width'] = 'Ange bredden av iframe';
 $_['help_iframe_size_height_type'] = 'Ange h√∂jden av iframe';
 $_['help_iframe_size_width_type'] = 'Ange bredden av iframe';
 $_['help_total'] = 'Kassan totala ordern m&aring;ste uppn&aring; innan betalningsmetod blir aktiv';
-$_['help_receipt'] = 'V√§lj Ja f√∂r Paysons kvittosidan eller Nej for Opencarts kvittosidan';
-$_['help_totals_to_ignore'] = 'Kommaseparerad lista med ordertill√§gg som ej skall skickas till Payson';
-$_['help_order_status'] = 'Ange efter OpenCart efter att kunden har slutf√∂rt en betalning eller n√§r en faktura kan skickas';
-$_['help_order_status_shipped'] = 'Meddela Payson att ordern har skickats.<br />V√§nligen kontrollera under Admin | System -> Logs att ordern har f√•tt status skickad i Payson innan den skickas till kunden.';
-$_['help_order_status_canceled'] = 'Meddela Payson att ordern har avbrutits.<br />V√§nligen kontrollera under Admin | System -> Logs att ordern har f√•tt status cancelled  i Payson.';
-$_['help_order_status_refunded'] = 'Meddela Payson att ordern ska krediteras.<br />V√§nligen kontrollera under Admin | System -> Logs att ordern har f√•tt status paidToAccount/Krediterad  i Payson.';
+$_['help_receipt'] = 'V‰lj Ja fˆr Paysons kvittosidan eller Nej for Opencarts kvittosidan';
+$_['help_totals_to_ignore'] = 'Kommaseparerad lista med ordertill‰gg som ej skall skickas till Payson';
+$_['help_order_status'] = 'Ange efter OpenCart efter att kunden har slutfˆrt en betalning eller n‰r en faktura kan skickas';
+$_['help_order_status_shipped'] = 'Meddela Payson att ordern har skickats.<br />V‰nligen kontrollera under Admin | System -> Logs att ordern har fÂtt status skickad i Payson innan den skickas till kunden.';
+$_['help_order_status_canceled'] = 'Meddela Payson att ordern har avbrutits.<br />V‰nligen kontrollera under Admin | System -> Logs att ordern har fÂtt status cancelled  i Payson.';
+$_['help_order_status_refunded'] = 'Meddela Payson att ordern ska krediteras.<br />V‰nligen kontrollera under Admin | System -> Logs att ordern har fÂtt status paidToAccount/Krediterad  i Payson.'; 
+?>

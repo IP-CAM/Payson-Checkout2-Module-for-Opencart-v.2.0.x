@@ -1,5 +1,4 @@
 <?php
-
 namespace PaysonEmbedded {
     require_once "paysonapiexception.php";
     require_once "paysonapierror.php";
@@ -8,30 +7,33 @@ namespace PaysonEmbedded {
     require_once "customer.php";
     require_once "gui.php";
     require_once "paysoncheckout.php";
+    require_once "account.php";
 }
 
 namespace PaysonEmbedded {
 
     class PaysonApi {
-
+        /**  API version 1.0.2 */
+        
         private $merchantId;
         private $apiKey;
         private $protocol = "https://%s";
         const PAYSON_HOST = "api.payson.se/2.0/";
         const ACTION_CHECKOUTS = "Checkouts/";
-        private $paysonMerchant = NULL;
-        private $payData = NULL;
-        private $customer = NULL;
+        const ACTION_ACCOUNTS = "Accounts/";
+        private $paysonMerchant = null;
+        private $payData = null;
+        private $customer = null;
         private $allOrderData = array();
-        private $gui = NULL;
-        private $useTestEnvironment = NULL;
-        private $checkoutId = NULL;
-        private $paysonResponse = NULL;
+        private $gui = null;
+        private $useTestEnvironment = null;
+        private $checkoutId = null;
+        private $paysonResponse = null;
         public $paysonResponseErrors = array();
 
         public function __construct($merchantId, $apiKey, $useTestEnvironment = false) {
             $this->useTestEnvironment = $useTestEnvironment;
-            $this->merchantId =$merchantId;
+            $this->merchantId = $merchantId;
             $this->apiKey = $apiKey;
             
             if (!function_exists('curl_exec')) {
@@ -56,6 +58,15 @@ namespace PaysonEmbedded {
             return $checkoutId;
         }
         
+        public function CreateGetCheckout(Checkout $checkout) {
+            $result = $this->doCurlRequest('POST', $this->getUrl(self::ACTION_CHECKOUTS), $checkout->toArray(), true);
+            $newCheckout = Checkout::create(json_decode($result));
+            if(!$newCheckout->id) {
+                throw new PaysonApiException("Checkout ID not received of unclear reason");
+            }
+            return $newCheckout;
+        }
+        
         public function UpdateCheckout($checkout) {
             if(!$checkout->id) {
                 throw new PaysonApiException("Checkout object which should be updated must have id property set");
@@ -78,21 +89,26 @@ namespace PaysonEmbedded {
             $checkout->status = 'canceled';
             return $this->UpdateCheckout($checkout);
         }
+        
+        public function Validate() {
+            $result = $this->doCurlRequest('GET', $this->getUrl(self::ACTION_ACCOUNTS), null);
+            return Account::create(json_decode($result));
+        }
 
-        private function doCurlRequest($method, $url, $postfields) {
+        private function doCurlRequest($method, $url, $postfields, $returnBody = false) {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $this->authorizationHeader());
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields?json_encode($postfields):null);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_setopt($ch, CURLOPT_HEADER, TRUE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HEADER, true);
             $result = curl_exec($ch);
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $body = substr($result, $header_size);
             $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curl_error = curl_error($ch);
             curl_close($ch);
-            
             
             /* This class of status codes indicates the action requested by the client was received, understood, accepted and processed successfully
              * 200 OK
@@ -103,14 +119,17 @@ namespace PaysonEmbedded {
             if ($response_code == 200) {
                 return $body;
             } elseif ($response_code == 201) {
+                if ($returnBody == true) {
+                    return $body;
+                }
                 return $result;
             } elseif ($result == false) {
-                throw new PaysonApiException('Curl error: '.curl_error($ch));
+                throw new PaysonApiException('Curl error: '.$curl_error);
             } else {
                 $errors = array();
                 
                 $data = json_decode($body,true);
-                $errors[] = new PaysonApiError('HTTP status code: ' . $response_code.', '.$data['message'], NULL);
+                $errors[] = new PaysonApiError('HTTP status code: ' . $response_code.', '.$data['message'], null);
                 
                 if(isset($data['errors']) && count($data['errors'])) {
                     $errors = array_merge($errors, $this->parseErrors($data['errors'], $response_code));    
@@ -131,7 +150,7 @@ namespace PaysonEmbedded {
 
         private function extractCheckoutId($result) {
             $checkoutId = null;
-            if (preg_match('#Location: (.*)#', $result, $res)) {
+            if (preg_match('#Location: (.*)#i', $result, $res)) {
                 $checkoutId = trim($res[1]);
             }
             $checkoutId = explode('/', $checkoutId);
@@ -154,8 +173,5 @@ namespace PaysonEmbedded {
         private function getUrl($action) {
             return (sprintf($this->protocol, ($this->useTestEnvironment ? 'test-' : '')) . self::PAYSON_HOST.$action);
         }
-
-
     }
-
 }

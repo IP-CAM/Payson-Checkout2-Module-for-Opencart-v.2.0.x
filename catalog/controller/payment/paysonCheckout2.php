@@ -6,7 +6,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
     private $api;
     private $data = array();
 
-    const MODULE_VERSION = 'paysonEmbedded_1.0.1.8';
+    const MODULE_VERSION = 'paysonEmbedded_1.0.1.9';
 
     function __construct($registry) {
         parent::__construct($registry);
@@ -722,6 +722,15 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         }
     }
 
+    private function getPaysonEmbeddedOrder($order_id) {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "payson_embedded_order` WHERE order_id = '" . (int) $order_id . "' ORDER BY `added` DESC");
+        if($query->num_rows){
+           return $query->row;
+        } else {
+            return null;
+        } 
+    }
+
     private function getOrderIdPayson($checkout_id) {
         $query = $this->db->query("SELECT `order_id` FROM `" . DB_PREFIX . "payson_embedded_order` WHERE checkout_id = '" . (int) $order_id . "' AND payment_status = 'created'");
         if ($query->num_rows && $query->row['checkout_id']) {
@@ -819,6 +828,11 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         return 'Module version: ' . $this->config->get('paysonCheckout2_modul_version') . '&#10;------------------------------------------------------------------------&#10;';
     }
 
+    private function writeTextToLog($additionalInfo = "") {
+        $module_version = 'Module version: ' . $this->config->get('paysonCheckout2_modul_version') . '&#10;------------------------------------------------------------------------&#10;';
+        $this->log->write('PAYSON CHECKOUT 2.0' . $additionalInfo . '&#10;&#10;'.$module_version);
+    }
+
     public function paysonApiError($error) {
         $this->load->language('payment/paysonCheckout2');
         $error_code = '<html>
@@ -833,6 +847,62 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         exit;
     }
 
+    public function capture($order_id){
+        $getCheckoutObject = $this->getPaysonEmbeddedOrder($order_id);
+        
+        if($getCheckoutObject['checkout_id'] && ($getCheckoutObject['payment_status'] == 'readyToShip' || $getCheckoutObject['payment_status'] == 'shipped' || $getCheckoutObject['payment_status'] == 'paidToAccount'))
+        {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            error_log(print_r($order_info, true));
+            try
+            {
+                $additionalInfo = '';
+                $callPaysonApi = $this->getAPIInstanceMultiShop();
+                $checkout = $callPaysonApi->GetCheckout($getCheckoutObject['checkout_id']);
+                //paysonCheckout2_request_phone
+                if($order_info['order_status_id'] == $this->config->get('paysonCheckout2_order_status_shipped_id')) 
+                { 
+                    $checkout = $callPaysonApi->ShipCheckout($checkout);
+                }
+                elseif($order_info['order_status_id'] == $this->config->get('paysonCheckout2_order_status_canceled_id')) 
+                {
+                    $checkout = $callPaysonApi->CancelCheckout($checkout);
+                }
+                elseif($order_info['order_status_id'] == $this->config->get('paysonCheckout2_order_status_refunded_id')) 
+                {
+                    if ($checkout->status == 'readyToShip' || $checkout->status == 'shipped' || $checkout->status == 'paidToAccount') 
+                    {
+                        if ($checkout->status == 'readyToShip') 
+                        {
+                            $checkout = $callPaysonApi->ShipCheckout($checkout);
+                        }
+                        foreach ($checkout->payData->items as $item) 
+                        {
+                            $item->creditedAmount = ($item->totalPriceIncludingTax);
+                        }
+                        unset($item);
+                        $checkout2 = $callPaysonApi->UpdateCheckout($checkout);
+                        $checkout = $callPaysonApi->GetCheckout($checkout2->id);
+                    }
+                }
+                else
+                {
+                    // Do nothing
+                }
+                $additionalInfo = '&#10;Notification is sent on and the order has been: &#9;'. $checkout->status. '&#10;&#10; Order: ' . $order_id. '&#10;&#10; checkout: ' . $checkout->id . '&#10;&#10; Payson-ref: '. $checkout->purchaseId;
+                $this->writeTextToLog($additionalInfo);
+            } 
+            catch (Exception $e) 
+            {
+                $message = '<Payson OpenCart Checkout 2.0 -  - Payson Order Status> &#10;' . $e->getMessage() . '&#10;'.  $e->getCode();
+                $this->writeToLog($message);
+            }
+        }
+        else
+        {
+            //Do nothing
+        }    
+    }
 }
 
 ?>

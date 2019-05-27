@@ -787,10 +787,18 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
                 return "SV";
             case "FI":
                 return "FI";
+            case "DA":
             case "DK":
-                return "DK";
+                return "DA";
+            case "NB":
             case "NO":
                 return "NO";
+            case "CA":
+            case "GL":
+            case "ES":
+                return "ES":
+            case "DE":
+           		return "DE";
             default:
                 return "EN";
         }

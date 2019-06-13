@@ -6,7 +6,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
     private $api;
     private $data = array();
 
-    const MODULE_VERSION = 'paysonEmbedded_1.0.1.9';
+    const MODULE_VERSION = 'paysonEmbedded_1.0.2.0';
 
     function __construct($registry) {
         parent::__construct($registry);

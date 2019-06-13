@@ -118,6 +118,10 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
         $this->data['help_order_status_shipped'] = $this->language->get('help_order_status_shipped');
         $this->data['help_order_status_canceled'] = $this->language->get('help_order_status_canceled');
         $this->data['help_order_status_refunded'] = $this->language->get('help_order_status_refunded');
+        $this->data['tab_api'] = $this->language->get('tab_api');
+        $this->data['tab_general'] = $this->language->get('tab_general');
+        $this->data['tab_order_status'] = $this->language->get('tab_order_status');
+        $this->data['tab_checkout_scheme'] = $this->language->get('tab_checkout_scheme');
 
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];

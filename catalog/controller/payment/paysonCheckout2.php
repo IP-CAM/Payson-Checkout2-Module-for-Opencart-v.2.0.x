@@ -796,7 +796,7 @@ class ControllerPaymentPaysonCheckout2 extends Controller {
             case "CA":
             case "GL":
             case "ES":
-                return "ES":
+                return "ES";
             case "DE":
            		return "DE";
             default:
